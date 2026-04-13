@@ -1,6 +1,7 @@
 import 'package:Riden/home/ride_request_view.dart';
 import 'package:Riden/widgets/background_image.dart';
 import 'package:Riden/widgets/riden_bottom_nav.dart';
+import 'package:Riden/account/account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -279,9 +280,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: RidenBottomNav(
                   selectedIndex: _selectedNavIndex,
                   onItemSelected: (index) {
-                    setState(() {
-                      _selectedNavIndex = index;
-                    });
+                    if (index == 3) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const AccountScreen()),
+                      );
+                    } else {
+                      setState(() {
+                        _selectedNavIndex = index;
+                      });
+                    }
                   },
                 ),
               ),

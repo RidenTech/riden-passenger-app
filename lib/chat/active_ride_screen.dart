@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'ride_complete_screen.dart';
+import 'sos_screen.dart';
 import 'sos_screen.dart';
 
 class ActiveRideScreen extends StatefulWidget {
@@ -11,6 +14,26 @@ class ActiveRideScreen extends StatefulWidget {
 
 class _ActiveRideScreenState extends State<ActiveRideScreen> {
   double _sheetPosition = 0.35;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const RideCompleteScreen()),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
