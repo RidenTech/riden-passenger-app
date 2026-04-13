@@ -1,6 +1,6 @@
 import 'dart:ui';
-import 'package:Riden/home/car_selection_view.dart';
-import 'package:Riden/home/ridedetail.dart'; // New import
+import 'package:Riden/Booking/car_selection_view.dart';
+import 'package:Riden/Booking/ridedetail.dart'; // New import
 import 'package:Riden/widgets/conic_border_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -332,22 +332,18 @@ class _RideRequestViewState extends State<RideRequestView> {
     return Container(
       height: 45,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Positioned.fill(child: CustomPaint(painter: ConicBorderPainter())),
-          Padding(
+      child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -365,8 +361,6 @@ class _RideRequestViewState extends State<RideRequestView> {
               ],
             ),
           ),
-        ],
-      ),
     );
   }
 
@@ -374,14 +368,11 @@ class _RideRequestViewState extends State<RideRequestView> {
     return Container(
       height: 55,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
-      child: Stack(
-        children: [
-          Positioned.fill(child: CustomPaint(painter: ConicBorderPainter())),
-          Padding(
+      child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
@@ -413,8 +404,6 @@ class _RideRequestViewState extends State<RideRequestView> {
               ],
             ),
           ),
-        ],
-      ),
     );
   }
 
@@ -478,29 +467,20 @@ class ConfirmRideButton extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: onPressed,
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: CustomPaint(
-                    painter: ConicBorderPainter(),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  text,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      text,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

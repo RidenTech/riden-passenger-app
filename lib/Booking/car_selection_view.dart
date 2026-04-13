@@ -105,14 +105,11 @@ class _CarSelectionViewState extends State<CarSelectionView> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(25),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
-      child: Stack(
-        children: [
-          Positioned.fill(child: CustomPaint(painter: ConicBorderPainter())),
-          Column(
+      child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -130,7 +127,7 @@ class _CarSelectionViewState extends State<CarSelectionView> {
                     Text(
                       title,
                       style: GoogleFonts.poppins(
-                        color: Colors.black .withOpacity(0.9),
+                        color: Colors.white,
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -139,20 +136,18 @@ class _CarSelectionViewState extends State<CarSelectionView> {
                     Text(
                       "$optionsCount Options",
                       style: GoogleFonts.poppins(
-                        color: Colors.black.withOpacity(0.8),
+                        color: Colors.white70,
                         fontSize: 12,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Divider(color: Colors.black12, height: 1),
+              const Divider(color: Colors.white10, height: 1),
               ...cars.map((car) => _buildCarItem(car)).toList(),
               const SizedBox(height: 10),
             ],
           ),
-        ],
-      ),
     );
   }
 
@@ -195,19 +190,19 @@ class _CarSelectionViewState extends State<CarSelectionView> {
                   Text(
                     car.name,
                     style: GoogleFonts.poppins(
-                      color: isSelected ? Colors.black : Colors.black,
+                      color: isSelected ? Colors.black : Colors.white,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Row(
                     children: [
-                      Icon(Icons.access_time, color: isSelected ? Colors.black54 : Colors.black54 , size: 12),
+                      Icon(Icons.access_time, color: isSelected ? Colors.black54 : Colors.white54 , size: 12),
                       const SizedBox(width: 4),
                       Text(
                         car.time,
                         style: GoogleFonts.poppins(
-                          color: isSelected ? Colors.black54 : Colors.black54 ,
+                          color: isSelected ? Colors.black54 : Colors.white54 ,
                           fontSize: 11,
                         ),
                       ),
@@ -216,7 +211,7 @@ class _CarSelectionViewState extends State<CarSelectionView> {
                   Text(
                     car.description,
                     style: GoogleFonts.poppins(
-                      color: isSelected ? Colors.black45 : Colors.black38,
+                      color: isSelected ? Colors.black45 : Colors.white38,
                       fontSize: 10,
                     ),
                   ),
@@ -226,7 +221,7 @@ class _CarSelectionViewState extends State<CarSelectionView> {
             Text(
               car.price,
               style: GoogleFonts.poppins(
-                color: isSelected ? Colors.black : Colors.black ,
+                color: isSelected ? Colors.black : Colors.white ,
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),

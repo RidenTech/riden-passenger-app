@@ -72,7 +72,7 @@ class ChatScreen extends StatelessWidget {
                       children: [
                         const CircleAvatar(
                           radius: 24,
-                          backgroundImage: AssetImage("assets/images/r.png"), 
+                          backgroundImage: AssetImage("assets/images/profile.png"), 
                           backgroundColor: Colors.white24,
                         ),
                         const SizedBox(width: 16),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'ride_complete_screen.dart';
 import 'sos_screen.dart';
-import 'sos_screen.dart';
 
 class ActiveRideScreen extends StatefulWidget {
   const ActiveRideScreen({super.key});
@@ -179,7 +178,7 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                               children: [
                                 const CircleAvatar(
                                   radius: 26,
-                                  backgroundImage: AssetImage("assets/images/r.png"), 
+                                  backgroundImage: AssetImage("assets/images/profile.png"), 
                                   backgroundColor: Colors.white24,
                                 ),
                                 const SizedBox(width: 16),
@@ -300,9 +299,9 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6), // 0.6 opacity white
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: child,
     );
@@ -322,15 +321,9 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF4A5C75), // Blue-grey block color style
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ]
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Text(text, style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
     );

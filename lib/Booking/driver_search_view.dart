@@ -236,15 +236,15 @@ class _DriverSearchViewState extends State<DriverSearchView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Row(
         children: [
           const CircleAvatar(
             radius: 26,
-            backgroundImage: AssetImage("assets/images/r.png"), 
+            backgroundImage: AssetImage("assets/images/profile.png"), 
             backgroundColor: Colors.white24,
           ),
           const SizedBox(width: 16),
@@ -252,8 +252,8 @@ class _DriverSearchViewState extends State<DriverSearchView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Sergio Fernandez", style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.9), fontSize: 14, fontWeight: FontWeight.w600 )),
-                Text("Driver", style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.8), fontSize: 12)),
+                Text("Sergio Fernandez", style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                Text("Driver", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12)),
               ],
             ),
           ),
@@ -289,21 +289,21 @@ class _DriverSearchViewState extends State<DriverSearchView> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Destination", style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.9) , fontSize: 15, fontWeight: FontWeight.w600)),
+          Text("Destination", style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 20),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
                 children: [
-                  const Icon(Icons.circle, color: Colors.black  , size: 10),
+                  const Icon(Icons.circle, color: Colors.white, size: 10),
                   Container(width: 2, height: 35, color: Colors.white24),
                   const Icon(Icons.send_rounded, color: Colors.blue, size: 16),
                 ],
@@ -313,11 +313,11 @@ class _DriverSearchViewState extends State<DriverSearchView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Home", style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.9)    , fontSize: 14, fontWeight: FontWeight.w600)),
-                    Text("2972 Westheimer Rd. Santa Ana, Illinois 85486", style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.9)  , fontSize: 11)),
+                    Text("Home", style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                    Text("2972 Westheimer Rd. Santa Ana, Illinois 85486", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 11)),
                     const SizedBox(height: 18),
-                    Text("Coffee Shop", style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.9)  , fontSize: 14, fontWeight: FontWeight.w600)),
-                    Text("1901 Thorridge Cir. Shiloh, Hawaii 81063", style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.9)  , fontSize: 11)),
+                    Text("Coffee Shop", style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                    Text("1901 Thorridge Cir. Shiloh, Hawaii 81063", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 11)),
                   ],
                 ),
               ),
@@ -332,9 +332,9 @@ class _DriverSearchViewState extends State<DriverSearchView> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -342,19 +342,19 @@ class _DriverSearchViewState extends State<DriverSearchView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text("Ride Details", style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.9)  , fontSize: 15, fontWeight: FontWeight.w600)),
-               Text("Booking ID : 2345", style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.9)  , fontSize: 12)),
+               Text("Ride Details", style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
+               Text("Booking ID : 2345", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12)),
             ],
           ),
           const SizedBox(height: 20),
-          Text("Riden SUV(SL 984-ZWRT)", style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.9)  , fontSize: 14, fontWeight: FontWeight.w500)),
-          const Divider(color: Colors.black54, height: 30),
+          Text("Riden SUV(SL 984-ZWRT)", style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
+          const Divider(color: Colors.white24, height: 30),
           _buildDetailRow("Total Distance", "9.8 km"),
-          const Divider(color: Colors.black54 , height: 30),
+          const Divider(color: Colors.white24, height: 30),
           _buildDetailRow("Total Fare", "C\$70"),
-          const Divider(color: Colors.black54 , height: 30),
+          const Divider(color: Colors.white24, height: 30),
           _buildDetailRow("Discount", "C\$0"),
-          const Divider(color: Colors.black54  , height: 30),
+          const Divider(color: Colors.white24, height: 30),
           _buildDetailRow("Payment Method", "Wallet"),
         ],
       ),
@@ -365,8 +365,8 @@ class _DriverSearchViewState extends State<DriverSearchView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: GoogleFonts.poppins(color: Colors.black54  , fontSize: 13, fontWeight: FontWeight.w500)),
-        Text(value, style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.9), fontSize: 13, fontWeight: FontWeight.bold)),
+        Text(title, style: GoogleFonts.poppins(color: Colors.white54, fontSize: 13, fontWeight: FontWeight.w500)),
+        Text(value, style: GoogleFonts.poppins(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -376,9 +376,9 @@ class _DriverSearchViewState extends State<DriverSearchView> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -389,7 +389,7 @@ class _DriverSearchViewState extends State<DriverSearchView> {
             child: const Icon(Icons.share, color: Colors.white, size: 16),
           ),
           const SizedBox(width: 16),
-          Text("Share Ride Details", style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.9)  , fontSize: 14, fontWeight: FontWeight.w500)),
+          Text("Share Ride Details", style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
         ],
       ),
     );

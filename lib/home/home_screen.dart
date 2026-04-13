@@ -1,4 +1,4 @@
-import 'package:Riden/home/ride_request_view.dart';
+import 'package:Riden/Booking/ride_request_view.dart';
 import 'package:Riden/widgets/background_image.dart';
 import 'package:Riden/widgets/riden_bottom_nav.dart';
 import 'package:Riden/account/account_screen.dart';

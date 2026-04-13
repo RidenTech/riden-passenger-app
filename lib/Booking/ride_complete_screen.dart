@@ -108,8 +108,9 @@ class _RideCompleteScreenState extends State<RideCompleteScreen> {
                            width: 120,
                            height: 120,
                            decoration: BoxDecoration(
-                             color: const Color(0xFF4A5C75),
+                             color: Colors.white.withOpacity(0.2),
                              borderRadius: BorderRadius.circular(20),
+                             border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
                            ),
                            child: const Icon(Icons.check, color: Colors.blue, size: 60),
                          );

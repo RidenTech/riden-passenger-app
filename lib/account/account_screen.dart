@@ -92,7 +92,7 @@ class AccountScreen extends StatelessWidget {
                       ),
                       child: CircleAvatar(
                         radius: avatarRadius,
-                        backgroundImage: const AssetImage("assets/images/r.png"),
+                        backgroundImage: const AssetImage("assets/images/profile.png"),
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.015),
@@ -113,7 +113,7 @@ class AccountScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: Colors.white.withOpacity(0.08)),
                         ),

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'active_ride_screen.dart'; 
+import '../Booking/active_ride_screen.dart'; 
 
 class CallScreen extends StatefulWidget {
   const CallScreen({super.key});
@@ -103,7 +103,7 @@ class _CallScreenState extends State<CallScreen> {
                     ),
                     child: const CircleAvatar(
                       radius: 46,
-                      backgroundImage: AssetImage("assets/images/r.png"), 
+                      backgroundImage: AssetImage("assets/images/profile.png"), 
                     ),
                   ),
                   const SizedBox(height: 20),

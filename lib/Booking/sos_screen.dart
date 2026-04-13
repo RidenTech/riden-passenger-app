@@ -106,9 +106,9 @@ class SosScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6), // Matching opacity 6
+        color: Colors.white.withOpacity(0.2), // Matching opacity 20%
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -120,7 +120,7 @@ class SosScreen extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(text, style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.85), fontSize: 11, fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis),
+            child: Text(text, style: GoogleFonts.poppins(color: Colors.white.withOpacity(0.85), fontSize: 11, fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
         ],
       ),

@@ -85,15 +85,15 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                       width: MediaQuery.of(context).size.width * 0.65,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.6), // opacity 6
+                        color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.white.withOpacity(0.1)),
+                        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
                       ),
                       child: Row(
                         children: [
                           const CircleAvatar(
                             radius: 20,
-                            backgroundImage: AssetImage("assets/images/r.png"), 
+                            backgroundImage: AssetImage("assets/images/profile.png"), 
                             backgroundColor: Colors.white24,
                           ),
                           const SizedBox(width: 12),
@@ -159,9 +159,9 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                         margin: const EdgeInsets.only(bottom: 30),
                         padding: const EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 10),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.4),
+                          color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.white.withOpacity(0.1)),
+                          border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,15 +213,9 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF4A5C75), // Blue-grey block color style
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Text(text, style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
     );

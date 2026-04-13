@@ -156,9 +156,9 @@ class _RideDetailViewState extends State<RideDetailView> {
       height: 45,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Row(
         children: [
@@ -182,14 +182,14 @@ class _RideDetailViewState extends State<RideDetailView> {
                 Text(
                   title,
                   style: GoogleFonts.poppins(
-                    color: Colors.black54,
+                    color: Colors.white54,
                     fontSize: 10,
                   ),
                 ),
                 Text(
                   address,
                   style: GoogleFonts.poppins(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                   ),
@@ -208,9 +208,9 @@ class _RideDetailViewState extends State<RideDetailView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Row(
         children: [
@@ -229,7 +229,7 @@ class _RideDetailViewState extends State<RideDetailView> {
                 Text(
                   widget.selectedCar.name,
                   style: GoogleFonts.poppins(
-                    color: Colors.black.withOpacity(0.9),
+                    color: Colors.white,
                     fontSize: 16,
                     
                   ),
@@ -237,7 +237,7 @@ class _RideDetailViewState extends State<RideDetailView> {
                 Text(
                   widget.selectedCar.description,
                   style: GoogleFonts.poppins(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.white54,
                     fontSize: 12,
                   ),
                 ),
@@ -247,7 +247,7 @@ class _RideDetailViewState extends State<RideDetailView> {
           Text(
             widget.selectedCar.price,
             style: GoogleFonts.poppins(
-              color: Colors.black.withOpacity(0.9),
+              color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.w600  ,
             ),
@@ -262,21 +262,21 @@ class _RideDetailViewState extends State<RideDetailView> {
       height: 45,   
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Row(
         children: [
-          const Icon(Icons.payment_rounded, color: Colors.black, size: 24),
+          const Icon(Icons.payment_rounded, color: Colors.white, size: 24),
           const SizedBox(width: 16),
           Expanded(
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: _selectedPaymentMethod,
                 dropdownColor: Colors.white,  
-                icon: const Icon(Icons.keyboard_arrow_down, color: Colors.black54),
-                style: GoogleFonts.poppins(color: Colors.black , fontSize: 14),
+                icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white54),
+                style: GoogleFonts.poppins(color: Colors.white , fontSize: 14),
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedPaymentMethod = newValue!;
@@ -301,23 +301,23 @@ class _RideDetailViewState extends State<RideDetailView> {
       height: 45,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Row(
         children: [
-          const Icon(Icons.confirmation_number_outlined, color: Colors.black, size: 18),
+          const Icon(Icons.confirmation_number_outlined, color: Colors.white, size: 18),
           const SizedBox(width: 16),
           Text(
             "Add promo code",
             style: GoogleFonts.poppins(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 14,
             ),
           ),
           const Spacer(),
-          const Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: 14),
+          const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white54, size: 14),
         ],
       ),
     );
