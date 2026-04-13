@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     // Destination Cards (Local Scroll)
                     SizedBox(
-                      height: 180, // Fixed height for local scroll area
+                      height: 220, // Increased height to show at least 3 cards
                       child: ListView(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         physics: const BouncingScrollPhysics(),
@@ -274,8 +274,8 @@ class _HomeScreenState extends State<HomeScreen> {
             if (!_showRideSelection)
               Positioned(
                 bottom: 10,
-                left: 24,
-                right: 24,
+                left: 12,
+                right: 12,
                 child: RidenBottomNav(
                   selectedIndex: _selectedNavIndex,
                   onItemSelected: (index) {

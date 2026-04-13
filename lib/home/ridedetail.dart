@@ -34,12 +34,15 @@ class _RideDetailViewState extends State<RideDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      controller: widget.scrollController,
-      physics: const ClampingScrollPhysics(),
-      child: Column(
-        children: [
-          const SizedBox(height: 12),
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: SingleChildScrollView(
+            controller: widget.scrollController,
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                const SizedBox(height: 12),
           // Indicator
           Container(
             width: 40,
@@ -101,14 +104,31 @@ class _RideDetailViewState extends State<RideDetailView> {
                 _buildDiscountCard(),
                 const SizedBox(height: 40),
 
-                // Final Button
-                _buildRequestRideButton(),
-                const SizedBox(height: 40),
+                // Final Button Area
+                SizedBox(height: 100 + MediaQuery.of(context).padding.bottom),
               ],
             ),
           ),
         ],
       ),
+    ),
+  ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
+            color: const Color(0xFF030408),
+            padding: EdgeInsets.only(
+              left: 24,
+              right: 24,
+              top: 10,
+              bottom: 20 + MediaQuery.of(context).padding.bottom,
+            ),
+            child: _buildRequestRideButton(),
+          ),
+        ),
+      ],
     );
   }
 
@@ -329,12 +349,17 @@ class _RideDetailViewState extends State<RideDetailView> {
               );
             },
             child: Center(
-              child: Text(
-                "Request Ride",
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500   ,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  "Request Ride",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),

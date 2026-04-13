@@ -159,12 +159,15 @@ class _RideRequestViewState extends State<RideRequestView> {
       );
     }
 
-    return SingleChildScrollView(
-      controller: scrollController,
-      physics: const ClampingScrollPhysics(),
-      child: Column(
-        children: [
-          const SizedBox(height: 12),
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: SingleChildScrollView(
+            controller: scrollController,
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                const SizedBox(height: 12),
           // Indicator
           Container(
             width: 40,
@@ -207,35 +210,49 @@ class _RideRequestViewState extends State<RideRequestView> {
 
           const SizedBox(height: 20),
 
-          // Action Button
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: ConfirmRideButton(
-              text: _currentStep == RideStep.carSelection ? "Choose Your Car" : "Confirm",
-              onPressed: () {
-                setState(() {
-                  if (_currentStep == RideStep.locationRequest) {
-                    _currentStep = RideStep.carSelection;
-                    _snapSheet(0.5);
-                  } else if (_currentStep == RideStep.carSelection) {
-                    // If no car selected explicitly, use default
-                    _selectedCar ??= CarOption(
-                      name: "Riden SUV",
-                      image: "assets/images/suv_car.png",
-                      time: "4 min",
-                      price: "C\$ 70.00",
-                      description: "SUV with AC",
-                    );
-                    _currentStep = RideStep.rideDetail;
-                    _snapSheet(0.6);
-                  }
-                });
-              },
-            ),
-          ),
-          SizedBox(height: 20 + MediaQuery.of(context).padding.bottom),
+          // Action Button Space
+          SizedBox(height: 100 + MediaQuery.of(context).padding.bottom),
         ],
       ),
+    ),
+  ),
+  Positioned(
+    left: 0,
+    right: 0,
+    bottom: 0,
+    child: Container(
+      color: const Color(0xFF030408),
+      padding: EdgeInsets.only(
+        left: 24,
+        right: 24,
+        top: 10,
+        bottom: 20 + MediaQuery.of(context).padding.bottom,
+      ),
+      child: ConfirmRideButton(
+        text: _currentStep == RideStep.carSelection ? "Choose Your Car" : "Confirm",
+        onPressed: () {
+          setState(() {
+            if (_currentStep == RideStep.locationRequest) {
+              _currentStep = RideStep.carSelection;
+              _snapSheet(0.5);
+            } else if (_currentStep == RideStep.carSelection) {
+              // If no car selected explicitly, use default
+              _selectedCar ??= CarOption(
+                name: "Riden SUV",
+                image: "assets/images/suv_car.png",
+                time: "4 min",
+                price: "C\$ 70.00",
+                description: "SUV with AC",
+              );
+              _currentStep = RideStep.rideDetail;
+              _snapSheet(0.6);
+            }
+          });
+        },
+      ),
+    ),
+  ),
+],
     );
   }
 
@@ -469,12 +486,17 @@ class ConfirmRideButton extends StatelessWidget {
                   ),
                 ),
                 Center(
-                  child: Text(
-                    text,
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      text,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
