@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'chat_screen.dart';
-import 'call_screen.dart';
+import '../chat/chat_screen.dart';
+import '../chat/call_screen.dart';
 
 class DriverSearchView extends StatefulWidget {
   const DriverSearchView({super.key});

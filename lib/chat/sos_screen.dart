@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ActiveRideScreen extends StatelessWidget {
-  const ActiveRideScreen({super.key});
+class SosScreen extends StatelessWidget {
+  const SosScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +19,7 @@ class ActiveRideScreen extends StatelessWidget {
             ),
           ),
           _buildMapOverlay(),
+          
           // Top Action Buttons
           SafeArea(
             child: Padding(
@@ -51,87 +52,75 @@ class ActiveRideScreen extends StatelessWidget {
             ),
           ),
           
-          // Bottom Area contains SOS + Bottom Sheet
+          // Bottom Sheet Overlay
           Align(
             alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                // SOS Button
-                Padding(
-                  padding: const EdgeInsets.only(right: 20, bottom: 20),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE53935), // Red
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.redAccent.withOpacity(0.5), width: 2),
-                        ),
-                        child: const Icon(Icons.shield_outlined, color: Colors.white, size: 24),
-                      ),
-                      const SizedBox(height: 4),
-                      Text("SOS", style: GoogleFonts.poppins(color: const Color(0xFFE53935), fontSize: 12, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-                // Bottom Sheet
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 30),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF030408),
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2))),
-                      const SizedBox(height: 20),
-                      
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Active Ride", style: GoogleFonts.poppins(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                          Text("5 mins away from destination", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 13)),
-                        ],
-                      ),
-                      const SizedBox(height: 30),
-                      
-                      Row(
-                        children: [
-                          const CircleAvatar(
-                            radius: 24,
-                            backgroundImage: AssetImage("assets/images/r.png"), 
-                            backgroundColor: Colors.white24,
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Sergio Fernandez", style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
-                                Text("Driver", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 13)),
-                              ],
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text("C\$70", style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                              Text("Price", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 13)),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: MediaQuery.of(context).padding.bottom),
-                    ],
-                  ),
-                ),
-              ],
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.35, // Approx ~35%, leaving ~65% covered by Map
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(24, 35, 24, 20),
+              decoration: const BoxDecoration(
+                color: Color(0xFF030408),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+              ),
+              child: Column(
+                 children: [
+                   Text("Are You Safe ?", style: GoogleFonts.poppins(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                   const SizedBox(height: 35),
+                   
+                   // Action Buttons Row
+                   Row(
+                     children: [
+                       Expanded(child: _buildActionCard(Icons.call_rounded, "Call Emergency")),
+                       const SizedBox(width: 16),
+                       Expanded(child: _buildActionCard(Icons.share_rounded, "Share Ride Details")),
+                     ],
+                   ),
+                   const Spacer(),
+                   
+                   // Cancel Button
+                   SizedBox(
+                     width: double.infinity,
+                     height: 55,
+                     child: ElevatedButton(
+                       style: ElevatedButton.styleFrom(
+                         backgroundColor: const Color.fromRGBO(255, 58, 58, 0.7),
+                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                         elevation: 0,
+                       ),
+                       onPressed: () => Navigator.pop(context),
+                       child: Text("Cancel", style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+                     )
+                   ),
+                   SizedBox(height: MediaQuery.of(context).padding.bottom + 5),
+                 ]
+              ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionCard(IconData icon, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.6), // Matching opacity 6
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(color: Colors.blue[600], borderRadius: BorderRadius.circular(8)),
+            child: Icon(icon, color: Colors.white, size: 16),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(text, style: GoogleFonts.poppins(color: Colors.black.withOpacity(0.85), fontSize: 11, fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
         ],
       ),
