@@ -23,50 +23,79 @@ class RideConfirmationView extends StatelessWidget {
           ),
 
           // Top Action Buttons
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.arrow_back, color: Colors.black, size: 20),
+           SafeArea(
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    'RIDEN',
+                    style: GoogleFonts.audiowide(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey.shade600.withOpacity(0.82),
+                      height: 1.0,
                     ),
                   ),
-                  Stack(
+                ),
+                const SizedBox(height: 15),
+                // Top Row: Greeting
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white24, width: 1),
-                        ),
-                        child: const Icon(Icons.notifications_none_outlined, color: Colors.white, size: 22),
-                      ),
-                      Positioned(
-                        right: 2,
-                        top: 2,
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: Container(
+                                  padding: const EdgeInsets.all(7),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.arrow_back,
+                                      color: Colors.black, size: 20),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
+                        ],
+                      ),
+                      Stack(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(7),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.25),
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white24, width: 1),
+                            ),
+                            child: const Icon(Icons.notifications_none_outlined,
+                                color: Colors.white, size: 20),
+                          ),
+                          Positioned(
+                            right: 2,
+                            top: 2,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
 
@@ -100,6 +129,8 @@ class RideConfirmationView extends StatelessWidget {
                   // Confirmation Text
                   Text(
                     "Confirm Pickup",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
@@ -149,6 +180,8 @@ class RideConfirmationView extends StatelessWidget {
             child: Center(
               child: Text(
                 "Confirm",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.poppins(
                   color: Colors.white,
                   fontSize: 16,

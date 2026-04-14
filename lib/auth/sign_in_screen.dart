@@ -39,11 +39,11 @@ class _SignInScreenState extends State<SignInScreen> {
                       style: GoogleFonts.audiowide(
                         fontSize: 45,
                         fontWeight: FontWeight.w400,
-                        color: Colors.white, // Pure white as seen in image
+                        color: const Color(0xFF819ABE),
                         height: 1.0,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    /* const SizedBox(height: 12),
                     Text(
                       'Your Next Ride Is Waiting For You',
                       style: GoogleFonts.poppins(
@@ -52,7 +52,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         fontWeight: FontWeight.w400,
                         letterSpacing: 0.5,
                       ),
-                    ),
+                    ), */
                   ],
                 ),
               ),

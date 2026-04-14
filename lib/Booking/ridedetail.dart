@@ -276,7 +276,7 @@ class _RideDetailViewState extends State<RideDetailView> {
                 value: _selectedPaymentMethod,
                 dropdownColor: Colors.white,  
                 icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white54),
-                style: GoogleFonts.poppins(color: Colors.white , fontSize: 14),
+                style: GoogleFonts.poppins(color: Colors.black , fontSize: 14),
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedPaymentMethod = newValue!;

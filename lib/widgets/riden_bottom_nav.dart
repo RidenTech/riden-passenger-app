@@ -25,10 +25,10 @@ class RidenBottomNav extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildNavItem("Booking", Icons.bookmark_outline, 0),
-          _buildNavItem("Support", Icons.headset_mic_outlined, 1),
-          _buildNavItem("Activity", Icons.show_chart_rounded, 2),
-          _buildNavItem("Account", Icons.person_outline_rounded, 3),
+          Expanded(child: _buildNavItem("Booking", Icons.bookmark_outline, 0)),
+          Expanded(child: _buildNavItem("Support", Icons.headset_mic_outlined, 1)),
+          Expanded(child: _buildNavItem("Activity", Icons.show_chart_rounded, 2)),
+          Expanded(child: _buildNavItem("Account", Icons.person_outline_rounded, 3)),
         ],
       ),
     );
@@ -39,8 +39,8 @@ class RidenBottomNav extends StatelessWidget {
     return GestureDetector(
       onTap: () => onItemSelected(index),
       child: Container(
-        height: 45, 
-        width: 80,
+        height: 60, 
+        // Removed hardcoded width to allow flexible layout
         color: Colors.transparent, // Expand tap area
         child: Stack(
           alignment: Alignment.center,
@@ -75,6 +75,8 @@ class RidenBottomNav extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.poppins(
                     color: isActive ? Colors.white : Colors.white54,
                     fontSize: 12,

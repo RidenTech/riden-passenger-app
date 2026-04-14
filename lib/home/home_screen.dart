@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: 28,
                           fontWeight: FontWeight.w400,
                           color: Colors.grey.shade600.withOpacity(0.82),
-                          height: 1.0,
+                      height: 1.0,
                         ),
                       ),
                     ),
@@ -72,6 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Text(
                                 "Jackson Morgan",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.poppins(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -169,10 +171,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Recent destinations",
-                            style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+                          Expanded(
+                            child: Text(
+                              "Recent destinations",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+                            ),
                           ),
+                          const SizedBox(width: 8),
                           Text(
                             "See all >",
                             style: GoogleFonts.poppins(color: Colors.white.withOpacity(0.6), fontSize: 11),
@@ -375,6 +382,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 13,
@@ -383,6 +392,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Text(
                         subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
                           color: Colors.white.withOpacity(0.5),
                           fontSize: 11,

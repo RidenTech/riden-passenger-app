@@ -64,17 +64,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 style: GoogleFonts.audiowide(
                                   fontSize: 45,
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.white,
+                                  color: const Color(0xFF819ABE),
                                   height: 1.0,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'Your Next Ride Is Waiting For You',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  letterSpacing: 0.5,
                                 ),
                               ),
                             ],

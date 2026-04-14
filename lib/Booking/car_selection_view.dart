@@ -124,12 +124,16 @@ class _CarSelectionViewState extends State<CarSelectionView> {
                       child: Icon(icon, color: Colors.white, size: 18),
                     ),
                     const SizedBox(width: 12),
-                    Text(
-                      title,
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
+                    Expanded(
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     const Spacer(),
@@ -189,6 +193,8 @@ class _CarSelectionViewState extends State<CarSelectionView> {
                 children: [
                   Text(
                     car.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
                       color: isSelected ? Colors.black : Colors.white,
                       fontSize: 14,
@@ -210,6 +216,8 @@ class _CarSelectionViewState extends State<CarSelectionView> {
                   ),
                   Text(
                     car.description,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
                       color: isSelected ? Colors.black45 : Colors.white38,
                       fontSize: 10,
@@ -218,8 +226,11 @@ class _CarSelectionViewState extends State<CarSelectionView> {
                 ],
               ),
             ),
+            const SizedBox(width: 8),
             Text(
               car.price,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: GoogleFonts.poppins(
                 color: isSelected ? Colors.black : Colors.white ,
                 fontSize: 14,

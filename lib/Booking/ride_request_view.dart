@@ -24,17 +24,45 @@ class _RideRequestViewState extends State<RideRequestView> {
   
   // Data State
   CarOption? _selectedCar;
+  late TextEditingController _pickupController;
+  late TextEditingController _destinationController;
+  final FocusNode _pickupFocusNode = FocusNode();
+  final FocusNode _destinationFocusNode = FocusNode();
   String _pickupLocation = "Home - 2972 Westheimer Rd.";
   String _destinationLocation = "Office - 1901 Thorridge Cir.";
 
   @override
   void initState() {
     super.initState();
+    _pickupController = TextEditingController(text: _pickupLocation);
+    _destinationController = TextEditingController(text: _destinationLocation);
+    
+    // Trigger rebuild on typing to show dynamic suggestions
+    _pickupController.addListener(() => setState(() {}));
+    _destinationController.addListener(() => setState(() {}));
+
+    // Auto-expand sheet on focus (Limited to 70%)
+    _pickupFocusNode.addListener(() {
+      if (_pickupFocusNode.hasFocus) _snapSheet(0.7);
+    });
+    _destinationFocusNode.addListener(() {
+      if (_destinationFocusNode.hasFocus) _snapSheet(0.7);
+    });
+
     _sheetController.addListener(() {
       setState(() {
         _sheetPosition = _sheetController.size;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _pickupController.dispose();
+    _destinationController.dispose();
+    _pickupFocusNode.dispose();
+    _destinationFocusNode.dispose();
+    super.dispose();
   }
 
   void _handleBack() {
@@ -63,88 +91,121 @@ class _RideRequestViewState extends State<RideRequestView> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Map Section (Full Page Background)
-        Positioned.fill(
-          child: Container(
-            color: Colors.black,
-            child: Image.asset(
-              "assets/images/map.png",
-              fit: BoxFit.cover,
-              opacity: const AlwaysStoppedAnimation(0.6),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          // Map Section (Full Page Background)
+          Positioned.fill(
+            child: Container(
+              color: Colors.black,
+              child: Image.asset(
+                "assets/images/map.png",
+                fit: BoxFit.cover,
+                opacity: const AlwaysStoppedAnimation(0.6),
+              ),
             ),
           ),
-        ),
 
-        // Top Overlay: Back and Bell
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // Top Overlay: Back and Bell
+          SafeArea(
+            child: Column(
               children: [
-                GestureDetector(
-                  onTap: _handleBack,
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
+                const SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    'RIDEN',
+                    style: GoogleFonts.audiowide(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey.shade600.withOpacity(0.82),
+                      height: 1.0,
                     ),
-                    child: const Icon(Icons.arrow_back, color: Colors.black, size: 20),
                   ),
                 ),
-                Stack(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.3),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white24, width: 1),
+                const SizedBox(height: 15),
+                // Top Row: Greeting
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: Container(
+                                  padding: const EdgeInsets.all(7),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.arrow_back,
+                                      color: Colors.black, size: 20),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      child: const Icon(Icons.notifications_none_outlined, color: Colors.white, size: 22),
-                    ),
-                    Positioned(
-                      right: 2,
-                      top: 2,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
+                      Stack(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(7),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.25),
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white24, width: 1),
+                            ),
+                            child: const Icon(Icons.notifications_none_outlined,
+                                color: Colors.white, size: 20),
+                          ),
+                          Positioned(
+                            right: 2,
+                            top: 2,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-        ),
 
-        // Bottom Sheet
-        DraggableScrollableSheet(
-          controller: _sheetController,
-          initialChildSize: 0.5,
-          minChildSize: 0.45,
-          maxChildSize: 0.95,
-          builder: (context, scrollController) {
-            return Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFF030408),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
+          // Bottom Sheet
+          DraggableScrollableSheet(
+            controller: _sheetController,
+            initialChildSize: 0.5,
+            minChildSize: 0.45,
+            maxChildSize: 0.7,
+            builder: (context, scrollController) {
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFF030408),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
                 ),
-              ),
-              child: _buildSheetContent(scrollController),
-            );
-          },
-        ),
-      ],
+                child: _buildSheetContent(scrollController),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -180,6 +241,8 @@ class _RideRequestViewState extends State<RideRequestView> {
           const SizedBox(height: 20),
           Text(
             _currentStep == RideStep.carSelection ? "Choose Your Car" : "Where to ?",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: GoogleFonts.poppins(
               fontSize: 26,
               fontWeight: FontWeight.w600,
@@ -304,26 +367,51 @@ class _RideRequestViewState extends State<RideRequestView> {
             _buildLocationCard(
               icon: Icons.gps_fixed_rounded,
               title: "Pickup",
-              subtitle: "Enter your pickup location",
+              hintText: "Enter your pickup location",
+              controller: _pickupController,
+              focusNode: _pickupFocusNode,
             ),
             const SizedBox(height: 16),
             _buildLocationCard(
               icon: Icons.location_on_rounded,
               title: "Where to go?",
-              subtitle: "Enter your destination location",
+              hintText: "Enter your destination location",
+              controller: _destinationController,
+              focusNode: _destinationFocusNode,
             ),
           ],
         ),
       ),
+      const SizedBox(height: 20),
 
-      // Suggestion List (Visible when dragged up)
-      if (_sheetPosition > 0.6) ...[
-        const SizedBox(height: 30),
-        ...List.generate(3, (index) => _buildSuggestionItem(
-          "Coffee shop",
-          "1901 Thorridge Cir. Shiloh, Hawaii 81063",
-        )),
-      ],
+      // Dynamic Suggestions (Only show when typing)
+      if (_pickupController.text.isNotEmpty || _destinationController.text.isNotEmpty)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSuggestionCard(
+                icon: Icons.work_outline,
+                title: "Office",
+                subtitle: "2972 Westheimer Rd. Westheimer ...",
+                time: "12 min",
+                price: "14.20",
+                dotColor: Colors.blue,
+              ),
+              const SizedBox(height: 12),
+              _buildSuggestionCard(
+                icon: Icons.coffee_outlined,
+                title: "Coffee shop",
+                subtitle: "1901 Thorridge Cir. Shiloh, Hawai ...",
+                time: "8 min",
+                price: "10.50",
+                dotColor: Colors.orange,
+              ),
+            ],
+          ),
+        ),
+
       const SizedBox(height: 40),
     ];
   }
@@ -353,8 +441,9 @@ class _RideRequestViewState extends State<RideRequestView> {
                 Expanded(
                   child: Text(
                     label,
-                    style: GoogleFonts.poppins(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
                   ),
                 ),
                 const Icon(Icons.keyboard_arrow_down, color: Colors.white54, size: 18),
@@ -364,9 +453,15 @@ class _RideRequestViewState extends State<RideRequestView> {
     );
   }
 
-  Widget _buildLocationCard({required IconData icon, required String title, required String subtitle}) {
+  Widget _buildLocationCard({
+    required IconData icon, 
+    required String title, 
+    required String hintText,
+    required TextEditingController controller,
+    required FocusNode focusNode,
+  }) {
     return Container(
-      height: 55,
+      height: 60,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(22),
@@ -392,11 +487,38 @@ class _RideRequestViewState extends State<RideRequestView> {
                     children: [
                       Text(
                         title,
-                        style: GoogleFonts.poppins(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500),
+                        style: GoogleFonts.poppins(
+                          color: Colors.white, 
+                          fontSize: 10, 
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                      Text(
-                        subtitle,
-                        style: GoogleFonts.poppins(color: Colors.white54, fontSize: 10),
+                      TextField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        onChanged: (value) {
+                          setState(() {
+                            if (title == "Pickup") {
+                              _pickupLocation = value;
+                            } else {
+                              _destinationLocation = value;
+                            }
+                          });
+                        },
+                        style: GoogleFonts.poppins(
+                          color: Colors.white.withOpacity(0.8), 
+                          fontSize: 12,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: hintText,
+                          hintStyle: GoogleFonts.poppins(
+                            color: Colors.white30, 
+                            fontSize: 12,
+                          ),
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                        ),
                       ),
                     ],
                   ),
@@ -407,6 +529,124 @@ class _RideRequestViewState extends State<RideRequestView> {
     );
   }
 
+  Widget _buildSuggestionCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String time,
+    required String price,
+    required Color dotColor,
+  }) {
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: const Color(0xFF111318).withOpacity(0.6),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: -20,
+            left: -15,
+            child: Container(
+              width: 30,  
+              height: 30,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF1E5197).withOpacity(0.6),
+                    blurRadius: 35,
+                    spreadRadius: 10,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+            child: Row(
+              children: [
+                Container(
+                  width: 4,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: dotColor,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, color: Colors.white, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          color: Colors.white.withOpacity(0.5),
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      time,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white.withOpacity(0.5),
+                        fontSize: 10,
+                      ),
+                    ),
+                    Text(
+                      "\$$price",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 15),
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Colors.white,
+                  size: 12,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSuggestionItem(String title, String subtitle) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -414,21 +654,25 @@ class _RideRequestViewState extends State<RideRequestView> {
         children: [
           const Icon(Icons.location_on_outlined, color: Colors.white, size: 20),
           const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  subtitle,
-                  style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

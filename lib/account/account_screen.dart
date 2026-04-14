@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import '../widgets/riden_bottom_nav.dart';
+import 'profile/my_profile.dart';
+import 'payment_method/payment_method.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -119,11 +122,11 @@ class AccountScreen extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            _buildMenuRow(Icons.person, "My Profile", menuFontSize, menuIconSize, arrowIconSize),
+                            _buildMenuRow(Icons.person, "My Profile", menuFontSize, menuIconSize, arrowIconSize, onTap: () => Get.to(() => const MyProfileScreen())),
                             _buildDivider(),
                             _buildMenuRow(Icons.calendar_today_rounded, "Booking History", menuFontSize, menuIconSize, arrowIconSize),
                             _buildDivider(),
-                            _buildMenuRow(Icons.account_balance_wallet_rounded, "Payment Methods", menuFontSize, menuIconSize, arrowIconSize),
+                            _buildMenuRow(Icons.account_balance_wallet_rounded, "Payment Methods", menuFontSize, menuIconSize, arrowIconSize, onTap: () => Get.to(() => const PaymentMethodScreen())),
                             _buildDivider(),
                             _buildMenuRow(Icons.account_balance_wallet_outlined, "In App Wallet", menuFontSize, menuIconSize, arrowIconSize),
                             _buildDivider(),
@@ -176,25 +179,28 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuRow(IconData icon, String title, double fontSize, double iconSize, double arrowSize) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.blue[400], size: iconSize),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              title,
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: fontSize,
-                fontWeight: FontWeight.w500,
+  Widget _buildMenuRow(IconData icon, String title, double fontSize, double iconSize, double arrowSize, {VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.blue[400], size: iconSize),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                title,
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
-          Icon(Icons.arrow_forward_ios_rounded, color: Colors.blue[400], size: arrowSize),
-        ],
+            Icon(Icons.arrow_forward_ios_rounded, color: Colors.blue[400], size: arrowSize),
+          ],
+        ),
       ),
     );
   }

@@ -2,13 +2,76 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'call_screen.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final DraggableScrollableController _sheetController = DraggableScrollableController();
+  final FocusNode _messageFocusNode = FocusNode();
+  
+  final List<Map<String, dynamic>> _messages = [
+    {"text": "Hi There excited for the ride", "isMe": true},
+    {"text": "Welcome to a wonderful experience", "isMe": false},
+    {"text": "Thanks For Letting Me In", "isMe": true},
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _messageFocusNode.addListener(() {
+      if (_messageFocusNode.hasFocus) {
+        _sheetController.animateTo(
+          0.7 ,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  void _sendMessage() {
+    if (_messageController.text.trim().isNotEmpty) {
+      setState(() {
+        _messages.add({
+          "text": _messageController.text.trim(),
+          "isMe": true,
+        });
+      });
+      _messageController.clear();
+      
+      // Auto-scroll to bottom
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    _scrollController.dispose();
+    _sheetController.dispose();
+    _messageFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
           // Map Background
@@ -21,89 +84,147 @@ class ChatScreen extends StatelessWidget {
           ),
           _buildMapOverlay(),
           // Top Action Buttons
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
+           SafeArea(
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    'RIDEN',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.audiowide(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey.shade600.withOpacity(0.82),
+                      height: 1.0,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                // Top Row: Greeting
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: Container(
+                                  padding: const EdgeInsets.all(7),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.arrow_back,
+                                      color: Colors.black, size: 20),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      child: const Icon(Icons.arrow_back, color: Colors.black, size: 20),
-                    ),
+                      Stack(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(7),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.25),
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white24, width: 1),
+                            ),
+                            child: const Icon(Icons.notifications_none_outlined,
+                                color: Colors.white, size: 20),
+                          ),
+                          Positioned(
+                            right: 2,
+                            top: 2,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white24, width: 1),
-                    ),
-                    child: const Icon(Icons.notifications_none_outlined, color: Colors.white, size: 22),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          // Bottom Sheet
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.65,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Color(0xFF030408),
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2))),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Row(
-                      children: [
-                        const CircleAvatar(
-                          radius: 24,
-                          backgroundImage: AssetImage("assets/images/profile.png"), 
-                          backgroundColor: Colors.white24,
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Text("Sergio Fernandez", style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                             Navigator.push(context, MaterialPageRoute(builder: (_) => const CallScreen()));
-                          },
-                          child: const Icon(Icons.phone, color: Colors.blue, size: 24),
-                        ),
-                      ],
+          // Bottom Sheet (Draggable to 80% on focus)
+          DraggableScrollableSheet(
+            controller: _sheetController,
+            initialChildSize: 0.65,
+            minChildSize: 0.4,
+            maxChildSize: 0.7,
+            builder: (context, scrollController) {
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFF030408),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2))),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        children: [
+                          const CircleAvatar(
+                            radius: 24,
+                            backgroundImage: AssetImage("assets/images/profile.png"), 
+                            backgroundColor: Colors.white24,
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Text(
+                              "Sergio Fernandez", 
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                               Navigator.push(context, MaterialPageRoute(builder: (_) => const CallScreen()));
+                            },
+                            child: const Icon(Icons.phone, color: Colors.blue, size: 24),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Divider(color: Colors.white12),
-                  Expanded(
-                    child: ListView(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      children: [
-                        _buildMessageBubble("Hi There excited for the ride", isMe: true),
-                        _buildMessageBubble("Welcome to a wonderful experience", isMe: false),
-                        _buildMessageBubble("Thanks For Letting Me In", isMe: true),
-                      ],
+                    const SizedBox(height: 10),
+                    const Divider(color: Colors.white12),
+                    Expanded(
+                      child: ListView.builder(
+                        controller: scrollController, // Use the sheet's controller for internal scrolling
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        itemCount: _messages.length,
+                        itemBuilder: (context, index) {
+                          return _buildMessageBubble(
+                            _messages[index]["text"], 
+                            isMe: _messages[index]["isMe"]
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  _buildMessageInput(context),
-                ],
-              ),
-            ),
+                    _buildMessageInput(context),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -139,7 +260,12 @@ class ChatScreen extends StatelessWidget {
                  color: Colors.white.withOpacity(0.9),
                  borderRadius: BorderRadius.circular(8),
                ),
-               child: Text("5 min away", style: GoogleFonts.poppins(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.bold)),
+               child: Text(
+                 "5 min away", 
+                 maxLines: 1,
+                 overflow: TextOverflow.ellipsis,
+                 style: GoogleFonts.poppins(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.bold),
+               ),
              ),
           ),
           Positioned(
@@ -191,9 +317,9 @@ class ChatScreen extends StatelessWidget {
 
   Widget _buildMessageInput(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 20, left: 20, right: 20, top: 10),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 20, left: 20, right: 20, top: 10),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.15),
           borderRadius: BorderRadius.circular(30),
@@ -204,9 +330,16 @@ class ChatScreen extends StatelessWidget {
             const Icon(Icons.emoji_emotions_outlined, color: Colors.blue, size: 20),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                "Type your message",
-                style: GoogleFonts.poppins(color: Colors.white54, fontSize: 14),
+              child: TextField(
+                controller: _messageController,
+                focusNode: _messageFocusNode,
+                style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
+                decoration: InputDecoration(
+                  hintText: "Type your message",
+                  hintStyle: GoogleFonts.poppins(color: Colors.white54, fontSize: 14),
+                  border: InputBorder.none,
+                ),
+                onSubmitted: (_) => _sendMessage(),
               ),
             ),
             Container(
@@ -218,7 +351,10 @@ class ChatScreen extends StatelessWidget {
               child: const Icon(Icons.mic, color: Colors.white, size: 16),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.send_rounded, color: Colors.blue, size: 24),
+            GestureDetector(
+              onTap: _sendMessage,
+              child: const Icon(Icons.send_rounded, color: Colors.blue, size: 24),
+            ),
           ],
         ),
       ),

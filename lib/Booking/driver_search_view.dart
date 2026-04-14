@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../chat/chat_screen.dart';
 import '../chat/call_screen.dart';
+import 'active_ride_screen.dart';
 
 class DriverSearchView extends StatefulWidget {
   const DriverSearchView({super.key});
@@ -53,34 +54,79 @@ class _DriverSearchViewState extends State<DriverSearchView> {
           if (!_isDriverFound) _buildSearchingOverlay(),
 
           // Top Action Buttons
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
+           SafeArea(
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    'RIDEN',
+                    style: GoogleFonts.audiowide(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey.shade600.withOpacity(0.82),
+                      height: 1.0,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                // Top Row: Greeting
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: Container(
+                                  padding: const EdgeInsets.all(7),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.arrow_back,
+                                      color: Colors.black, size: 20),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      child: const Icon(Icons.arrow_back, color: Colors.black, size: 20),
-                    ),
+                      Stack(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(7),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.25),
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white24, width: 1),
+                            ),
+                            child: const Icon(Icons.notifications_none_outlined,
+                                color: Colors.white, size: 20),
+                          ),
+                          Positioned(
+                            right: 2,
+                            top: 2,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white24, width: 1),
-                    ),
-                    child: const Icon(Icons.notifications_none_outlined, color: Colors.white, size: 22),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
 
@@ -158,9 +204,9 @@ class _DriverSearchViewState extends State<DriverSearchView> {
 
   Widget _buildFoundSheet() {
     return DraggableScrollableSheet(
-      initialChildSize: 0.45,
-      minChildSize: 0.45,
-      maxChildSize: 0.9,
+      initialChildSize: 0.40,
+      minChildSize: 0.40,
+      maxChildSize: 0.7,
       builder: (context, scrollController) {
         return Container(
           decoration: const BoxDecoration(
@@ -179,8 +225,19 @@ class _DriverSearchViewState extends State<DriverSearchView> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Car Arriving", style: GoogleFonts.poppins(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-                    Text("5 mins away", style: GoogleFonts.poppins(color: Colors.white70, fontSize: 14)),
+                    Expanded(
+                      child: Text(
+                        "Car Arriving", 
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      "5 mins away", 
+                      style: GoogleFonts.poppins(color: Colors.white70, fontSize: 14),
+                    ),
                   ],
                 ),
               ),
@@ -220,10 +277,49 @@ class _DriverSearchViewState extends State<DriverSearchView> {
                 ),
               ),
 
-              // Fixed Cancel Button
+              // Triple Action Buttons Row
               Padding(
                 padding: EdgeInsets.fromLTRB(24, 10, 24, MediaQuery.of(context).padding.bottom + 10),
-                child: _buildCancelButton("Cancel Ride"),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildActionButton(
+                        text: "Confirm",
+                        color: Colors.blue,
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ActiveRideScreen())),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _buildActionButton(
+                        text: "Change Driver",
+                        color: Colors.white.withOpacity(0.2),
+                        onTap: () {
+                          setState(() {
+                            _isDriverFound = false;
+                            // Reset timer to simulate a new search
+                            _timer?.cancel();
+                            _timer = Timer(const Duration(seconds: 3), () {
+                              if (mounted) {
+                                setState(() {
+                                  _isDriverFound = true;
+                                });
+                              }
+                            });
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _buildActionButton(
+                        text: "Cancel Ride",
+                        color: const Color(0xFFC43535),
+                        onTap: () => Navigator.pop(context),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -252,8 +348,16 @@ class _DriverSearchViewState extends State<DriverSearchView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Sergio Fernandez", style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-                Text("Driver", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12)),
+                Text(
+                  "Sergio Fernandez", 
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  "Driver", 
+                  style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12),
+                ),
               ],
             ),
           ),
@@ -296,28 +400,80 @@ class _DriverSearchViewState extends State<DriverSearchView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Destination", style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
+          Text("Location  ",
+              style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600)),
           const SizedBox(height: 20),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  const Icon(Icons.circle, color: Colors.white, size: 10),
-                  Container(width: 2, height: 35, color: Colors.white24),
-                  const Icon(Icons.send_rounded, color: Colors.blue, size: 16),
-                ],
+              SizedBox(
+                width: 20,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 6),
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    // Vertical Dotted Line
+                    Column(
+                      children: List.generate(
+                        11,
+                        (index) => Container(
+                          width: 2,
+                          height: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.white24,
+                            borderRadius: BorderRadius.circular(1),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 1),
+                    const Icon(Icons.near_me_rounded,
+                        color: Colors.blue, size: 27 ),
+                  ],
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Home", style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-                    Text("2972 Westheimer Rd. Santa Ana, Illinois 85486", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 11)),
-                    const SizedBox(height: 18),
-                    Text("Coffee Shop", style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-                    Text("1901 Thorridge Cir. Shiloh, Hawaii 81063", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 11)),
+                    Text(
+                      "Home",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      "2972 Westheimer Rd. Santa Ana, Illinois 85486",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(color: Colors.white54, fontSize: 11),
+                    ),
+                    const SizedBox(height: 25),
+                    Text(
+                      "Coffee Shop",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      "1901 Thorridge Cir. Shiloh, Hawaii 81063",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(color: Colors.white54, fontSize: 11),
+                    ),
                   ],
                 ),
               ),
@@ -342,8 +498,19 @@ class _DriverSearchViewState extends State<DriverSearchView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text("Ride Details", style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
-               Text("Booking ID : 2345", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12)),
+               Expanded(
+                 child: Text(
+                   "Ride Details", 
+                   maxLines: 1,
+                   overflow: TextOverflow.ellipsis,
+                   style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+                 ),
+               ),
+               const SizedBox(width: 8),
+               Text(
+                 "Booking ID : 2345", 
+                 style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12),
+               ),
             ],
           ),
           const SizedBox(height: 20),
@@ -365,9 +532,53 @@ class _DriverSearchViewState extends State<DriverSearchView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: GoogleFonts.poppins(color: Colors.white54, fontSize: 13, fontWeight: FontWeight.w500)),
-        Text(value, style: GoogleFonts.poppins(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+        Expanded(
+          child: Text(
+            title, 
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.poppins(color: Colors.white54, fontSize: 13, fontWeight: FontWeight.w500),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          value, 
+          style: GoogleFonts.poppins(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+        ),
       ],
+    );
+  }
+
+  Widget _buildActionButton({required String text, required Color color, required VoidCallback onTap}) {
+    return Container(
+      height: 52,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(14),
+        border: color == Colors.white.withOpacity(0.2) 
+          ? Border.all(color: Colors.white.withOpacity(0.15), width: 1)
+          : null,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(14),
+          child: Center(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.poppins(
+                color: Colors.white, 
+                fontSize: 12, 
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -422,9 +633,19 @@ class _DriverSearchViewState extends State<DriverSearchView> {
   Widget _buildStatItem(String val, String title) {
     return Column(
       children: [
-        Text(val, style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(
+          val, 
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 4),
-        Text(title, style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12)),
+        Text(
+          title, 
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12),
+        ),
       ],
     );
   }
