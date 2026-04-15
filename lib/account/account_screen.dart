@@ -1,9 +1,12 @@
+import 'package:Riden/account/Aboutus/about_us.dart';
+import 'package:Riden/account/Complaints/copmplaints_tickets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../widgets/riden_bottom_nav.dart';
-import 'profile/my_profile.dart';
 import 'payment_method/payment_method.dart';
+import 'profile/my_profile.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -55,7 +58,11 @@ class AccountScreen extends StatelessWidget {
                       color: Colors.white,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.arrow_back, color: Colors.black, size: menuIconSize),
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
+                      size: menuIconSize,
+                    ),
                   ),
                 ),
                 _buildNotificationIcon(menuIconSize),
@@ -91,11 +98,16 @@ class AccountScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.blue[600]!, width: 2.5),
+                        border: Border.all(
+                          color: Colors.blue[600]!,
+                          width: 2.5,
+                        ),
                       ),
                       child: CircleAvatar(
                         radius: avatarRadius,
-                        backgroundImage: const AssetImage("assets/images/profile.png"),
+                        backgroundImage: const AssetImage(
+                          "assets/images/profile.png",
+                        ),
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.015),
@@ -113,32 +125,97 @@ class AccountScreen extends StatelessWidget {
 
                     // Menu Container
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.05,
+                      ),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.white.withOpacity(0.08)),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.08),
+                          ),
                         ),
                         child: Column(
                           children: [
-                            _buildMenuRow(Icons.person, "My Profile", menuFontSize, menuIconSize, arrowIconSize, onTap: () => Get.to(() => const MyProfileScreen())),
+                            _buildMenuRow(
+                              Icons.person,
+                              "My Profile",
+                              menuFontSize,
+                              menuIconSize,
+                              arrowIconSize,
+                              onTap: () =>
+                                  Get.to(() => const MyProfileScreen()),
+                            ),
                             _buildDivider(),
-                            _buildMenuRow(Icons.calendar_today_rounded, "Booking History", menuFontSize, menuIconSize, arrowIconSize),
+                            _buildMenuRow(
+                              Icons.calendar_today_rounded,
+                              "Booking History",
+                              menuFontSize,
+                              menuIconSize,
+                              arrowIconSize,
+                            ),
                             _buildDivider(),
-                            _buildMenuRow(Icons.account_balance_wallet_rounded, "Payment Methods", menuFontSize, menuIconSize, arrowIconSize, onTap: () => Get.to(() => const PaymentMethodScreen())),
+                            _buildMenuRow(
+                              Icons.account_balance_wallet_rounded,
+                              "Payment Methods",
+                              menuFontSize,
+                              menuIconSize,
+                              arrowIconSize,
+                              onTap: () =>
+                                  Get.to(() => const PaymentMethodScreen()),
+                            ),
                             _buildDivider(),
-                            _buildMenuRow(Icons.account_balance_wallet_outlined, "In App Wallet", menuFontSize, menuIconSize, arrowIconSize),
+                            _buildMenuRow(
+                              Icons.account_balance_wallet_outlined,
+                              "In App Wallet",
+                              menuFontSize,
+                              menuIconSize,
+                              arrowIconSize,
+                            ),
                             _buildDivider(),
-                            _buildMenuRow(Icons.confirmation_number_rounded, "Complaint Tickets", menuFontSize, menuIconSize, arrowIconSize),
+                            _buildMenuRow(
+                              Icons.confirmation_number_rounded,
+                              "Complaint Tickets",
+                              menuFontSize,
+                              menuIconSize,
+                              arrowIconSize,
+                              onTap: () =>
+                                  Get.to(() => const ComplaintsTicketScreen()),
+                            ),
                             _buildDivider(),
-                            _buildMenuRow(Icons.info_outline_rounded, "About Us", menuFontSize, menuIconSize, arrowIconSize),
+                            _buildMenuRow(
+                              Icons.info_outline_rounded,
+                              "About Us",
+                              menuFontSize,
+                              menuIconSize,
+                              arrowIconSize,
+                              onTap: () => Get.to(() => const AboutUsScreen()),
+                            ),
                             _buildDivider(),
-                            _buildMenuRow(Icons.settings_outlined, "App Settings", menuFontSize, menuIconSize, arrowIconSize),
+                            _buildMenuRow(
+                              Icons.settings_outlined,
+                              "App Settings",
+                              menuFontSize,
+                              menuIconSize,
+                              arrowIconSize,
+                            ),
                             _buildDivider(),
-                            _buildMenuRow(Icons.person_pin_circle_rounded, "Contact Support", menuFontSize, menuIconSize, arrowIconSize),
+                            _buildMenuRow(
+                              Icons.person_pin_circle_rounded,
+                              "Contact Support",
+                              menuFontSize,
+                              menuIconSize,
+                              arrowIconSize,
+                            ),
                             _buildDivider(),
-                            _buildMenuRow(Icons.logout_rounded, "Logout", menuFontSize, menuIconSize, arrowIconSize),
+                            _buildMenuRow(
+                              Icons.logout_rounded,
+                              "Logout",
+                              menuFontSize,
+                              menuIconSize,
+                              arrowIconSize,
+                            ),
                           ],
                         ),
                       ),
@@ -173,13 +250,17 @@ class AccountScreen extends StatelessWidget {
   }
 
   Widget _buildDivider() {
-    return Container(
-      height: 1,
-      color: Colors.white.withOpacity(0.07),
-    );
+    return Container(height: 1, color: Colors.white.withOpacity(0.07));
   }
 
-  Widget _buildMenuRow(IconData icon, String title, double fontSize, double iconSize, double arrowSize, {VoidCallback? onTap}) {
+  Widget _buildMenuRow(
+    IconData icon,
+    String title,
+    double fontSize,
+    double iconSize,
+    double arrowSize, {
+    VoidCallback? onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -198,7 +279,11 @@ class AccountScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(Icons.arrow_forward_ios_rounded, color: Colors.blue[400], size: arrowSize),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: Colors.blue[400],
+              size: arrowSize,
+            ),
           ],
         ),
       ),
@@ -215,7 +300,11 @@ class AccountScreen extends StatelessWidget {
             shape: BoxShape.circle,
             border: Border.all(color: Colors.white24, width: 1),
           ),
-          child: Icon(Icons.notifications_none_outlined, color: Colors.white, size: iconSize),
+          child: Icon(
+            Icons.notifications_none_outlined,
+            color: Colors.white,
+            size: iconSize,
+          ),
         ),
         Positioned(
           top: 6,

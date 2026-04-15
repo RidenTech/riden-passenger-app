@@ -1,5 +1,7 @@
+import 'package:Riden/Booking/driver_search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'car_selection_view.dart';
 import 'ride_confirmation_view.dart';
 
@@ -31,6 +33,13 @@ class _RideDetailViewState extends State<RideDetailView> {
     "Apple Pay",
     "Cash",
   ];
+  String _selectedPromoCode = "No promo code";
+  final List<String> _promoCodes = [
+    "No promo code",
+    "SAVE10 - 10% off",
+    "RIDE50 - \$5 off",
+    "WELCOME - 15% off",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -43,76 +52,78 @@ class _RideDetailViewState extends State<RideDetailView> {
             child: Column(
               children: [
                 const SizedBox(height: 12),
-          // Indicator
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.white24,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            "Request Ride",
-            style: GoogleFonts.poppins(
-              fontSize: 26,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 25),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: [
-                // Location Cards
-                _buildSectionHeader("Ride Details"),
-                const SizedBox(height: 12),
-                _buildLocationDetailCard(
-                  icon: Icons.gps_fixed_rounded,
-                  title: "Pickup Location",
-                  address: widget.pickupLocation,
-                  iconColor: Colors.black,
+                // Indicator
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-                const SizedBox(height: 12),
-                _buildLocationDetailCard(
-                  icon: Icons.location_on_rounded,
-                  title: "Destination Location",
-                  address: widget.destinationLocation,
-                  iconColor: Colors.black,
+                const SizedBox(height: 20),
+                Text(
+                  "Request Ride",
+                  style: GoogleFonts.poppins(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    letterSpacing: -0.5,
+                  ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 25),
 
-                // Car Detailed Card
-                _buildSectionHeader("Car Details"),
-                const SizedBox(height: 12),
-                _buildCarDetailCard(),
-                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      // Location Cards
+                      _buildSectionHeader("Ride Details"),
+                      const SizedBox(height: 12),
+                      _buildLocationDetailCard(
+                        icon: Icons.gps_fixed_rounded,
+                        title: "Pickup Location",
+                        address: widget.pickupLocation,
+                        iconColor: Colors.black,
+                      ),
+                      const SizedBox(height: 12),
+                      _buildLocationDetailCard(
+                        icon: Icons.location_on_rounded,
+                        title: "Destination Location",
+                        address: widget.destinationLocation,
+                        iconColor: Colors.black,
+                      ),
+                      const SizedBox(height: 24),
 
-                // Payment Card
-                _buildSectionHeader("Payment Method"),
-                const SizedBox(height: 12),
-                _buildPaymentCard(),
-                const SizedBox(height: 24),
+                      // Car Detailed Card
+                      _buildSectionHeader("Car Details"),
+                      const SizedBox(height: 12),
+                      _buildCarDetailCard(),
+                      const SizedBox(height: 24),
 
-                // Discount Card
-                _buildSectionHeader("Discount & Promo"),
-                const SizedBox(height: 12),
-                _buildDiscountCard(),
-                const SizedBox(height: 40),
+                      // Payment Card
+                      _buildSectionHeader("Payment Method"),
+                      const SizedBox(height: 12),
+                      _buildPaymentCard(),
+                      const SizedBox(height: 24),
 
-                // Final Button Area
-                SizedBox(height: 100 + MediaQuery.of(context).padding.bottom),
+                      // Discount Card
+                      _buildSectionHeader("Discount & Promo"),
+                      const SizedBox(height: 12),
+                      _buildDiscountCard(),
+                      const SizedBox(height: 40),
+
+                      // Final Button Area
+                      SizedBox(
+                        height: 100 + MediaQuery.of(context).padding.bottom,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-        ],
-      ),
-    ),
-  ),
+        ),
         Positioned(
           left: 0,
           right: 0,
@@ -169,9 +180,7 @@ class _RideDetailViewState extends State<RideDetailView> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Center(
-              child: Icon(icon, color: iconColor, size: 16),
-            ),
+            child: Center(child: Icon(icon, color: iconColor, size: 16)),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -219,7 +228,8 @@ class _RideDetailViewState extends State<RideDetailView> {
             width: 80,
             height: 50,
             fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) => const Icon(Icons.car_repair, color: Colors.white, size: 40),
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.car_repair, color: Colors.white, size: 40),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -228,11 +238,7 @@ class _RideDetailViewState extends State<RideDetailView> {
               children: [
                 Text(
                   widget.selectedCar.name,
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 16,
-                    
-                  ),
+                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
                 ),
                 Text(
                   widget.selectedCar.description,
@@ -249,7 +255,7 @@ class _RideDetailViewState extends State<RideDetailView> {
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 18,
-              fontWeight: FontWeight.w600  ,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -259,7 +265,7 @@ class _RideDetailViewState extends State<RideDetailView> {
 
   Widget _buildPaymentCard() {
     return Container(
-      height: 45,   
+      height: 45,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.2),
@@ -274,18 +280,43 @@ class _RideDetailViewState extends State<RideDetailView> {
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: _selectedPaymentMethod,
-                dropdownColor: Colors.white,  
-                icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white54),
-                style: GoogleFonts.poppins(color: Colors.black , fontSize: 14),
+                dropdownColor: Colors.white,
+                icon: const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white54,
+                ),
+                style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedPaymentMethod = newValue!;
                   });
                 },
-                items: _paymentMethods.map<DropdownMenuItem<String>>((String value) {
+                selectedItemBuilder: (BuildContext context) {
+                  return _paymentMethods.map((String value) {
+                    return Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        value,
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    );
+                  }).toList();
+                },
+                items: _paymentMethods.map<DropdownMenuItem<String>>((
+                  String value,
+                ) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      value,
+                      style: GoogleFonts.poppins(
+                        color: Colors.black87,
+                        fontSize: 14,
+                      ),
+                    ),
                   );
                 }).toList(),
               ),
@@ -307,17 +338,58 @@ class _RideDetailViewState extends State<RideDetailView> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.confirmation_number_outlined, color: Colors.white, size: 18),
+          const Icon(
+            Icons.confirmation_number_outlined,
+            color: Colors.white,
+            size: 18,
+          ),
           const SizedBox(width: 16),
-          Text(
-            "Add promo code",
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 14,
+          Expanded(
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _selectedPromoCode,
+                dropdownColor: Colors.white,
+                icon: const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white54,
+                ),
+                style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedPromoCode = newValue!;
+                  });
+                },
+                selectedItemBuilder: (BuildContext context) {
+                  return _promoCodes.map((String value) {
+                    return Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        value,
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    );
+                  }).toList();
+                },
+                items: _promoCodes.map<DropdownMenuItem<String>>((
+                  String value,
+                ) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: GoogleFonts.poppins(
+                        color: Colors.black87,
+                        fontSize: 14,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
-          const Spacer(),
-          const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white54, size: 14),
         ],
       ),
     );
@@ -344,7 +416,7 @@ class _RideDetailViewState extends State<RideDetailView> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const RideConfirmationView(),
+                  builder: (context) => const DriverSearchView(),
                 ),
               );
             },

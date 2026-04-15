@@ -1,6 +1,8 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'ride_complete_screen.dart';
 import 'sos_screen.dart';
 
@@ -50,7 +52,7 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
           ),
           _buildMapOverlay(),
           // Top Action Buttons
-           SafeArea(
+          SafeArea(
             child: Column(
               children: [
                 const SizedBox(height: 10),
@@ -85,8 +87,11 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                                     color: Colors.white,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.arrow_back,
-                                      color: Colors.black, size: 20),
+                                  child: const Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.black,
+                                    size: 20,
+                                  ),
                                 ),
                               ),
                             ],
@@ -100,10 +105,16 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                             decoration: BoxDecoration(
                               color: Colors.grey.withOpacity(0.25),
                               shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white24, width: 1),
+                              border: Border.all(
+                                color: Colors.white24,
+                                width: 1,
+                              ),
                             ),
-                            child: const Icon(Icons.notifications_none_outlined,
-                                color: Colors.white, size: 20),
+                            child: const Icon(
+                              Icons.notifications_none_outlined,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                           ),
                           Positioned(
                             right: 2,
@@ -130,22 +141,39 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
             right: 20,
             bottom: (_sheetPosition * MediaQuery.of(context).size.height) + 20,
             child: GestureDetector(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SosScreen())),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SosScreen()),
+              ),
               child: Column(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                    color: const Color(0xFFE53935), // Red
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.redAccent.withOpacity(0.5), width: 2),
+                      color: const Color(0xFFE53935), // Red
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.redAccent.withOpacity(0.5),
+                        width: 2,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.shield_outlined,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
-                  child: const Icon(Icons.shield_outlined, color: Colors.white, size: 20),
-                ),
-                const SizedBox(height: 4),
-                Text("SOS", style: GoogleFonts.poppins(color: const Color(0xFFE53935), fontSize: 12, fontWeight: FontWeight.bold)),
-              ],
-            ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "SOS",
+                    style: GoogleFonts.poppins(
+                      color: const Color(0xFFE53935),
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
 
@@ -166,7 +194,10 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                   padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
                   decoration: const BoxDecoration(
                     color: Color(0xFF030408),
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
+                    ),
                   ),
                   child: SingleChildScrollView(
                     controller: scrollController, // Allow scrolling the sheet
@@ -174,32 +205,51 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2))),
-                        const SizedBox(height: 20),
-                        
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Active Ride", style: GoogleFonts.poppins(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  "5 mins away from destination", 
-                                  textAlign: TextAlign.right,
-                                  style: GoogleFonts.poppins(color: Colors.white54, fontSize: 13),
-                                ),
-                              ),
-                            ],
+                        Container(
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.white24,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
                         ),
                         const SizedBox(height: 20),
-                        
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Active Ride",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                "5 mins away from destination",
+                                textAlign: TextAlign.right,
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white54,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+
                         if (_sheetPosition <= 0.4) ...[
                           // Collapsed state profile info
                           Row(
                             children: [
                               const CircleAvatar(
                                 radius: 26,
-                                backgroundImage: AssetImage("assets/images/r.png"), 
+                                backgroundImage: AssetImage(
+                                  "assets/images/r.png",
+                                ),
                                 backgroundColor: Colors.white,
                               ),
                               const SizedBox(width: 16),
@@ -208,14 +258,21 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Sergio Fernandez", 
+                                      "Sergio Fernandez",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     Text(
-                                      "Driver", 
-                                      style: GoogleFonts.poppins(color: Colors.white54, fontSize: 13),
+                                      "Driver",
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.white54,
+                                        fontSize: 13,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -223,8 +280,21 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text("C\$70", style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                                  Text("Price", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 13)),
+                                  Text(
+                                    "C\$70",
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Price",
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.white54,
+                                      fontSize: 13,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
@@ -237,23 +307,33 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                               children: [
                                 const CircleAvatar(
                                   radius: 26,
-                                  backgroundImage: AssetImage("assets/images/profile.png"), 
+                                  backgroundImage: AssetImage(
+                                    "assets/images/profile.png",
+                                  ),
                                   backgroundColor: Colors.white24,
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Sergio Fernandez", 
+                                        "Sergio Fernandez",
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+                                        style: GoogleFonts.poppins(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                       Text(
-                                        "Driver", 
-                                        style: GoogleFonts.poppins(color: Colors.white54, fontSize: 13),
+                                        "Driver",
+                                        style: GoogleFonts.poppins(
+                                          color: Colors.white54,
+                                          fontSize: 13,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -268,7 +348,14 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Destination", style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                                Text(
+                                  "Locations",
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 const SizedBox(height: 16),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,43 +363,77 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                                     Column(
                                       children: [
                                         const SizedBox(height: 5),
-                                        Container(width: 10, height: 10, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
+                                        Container(
+                                          width: 10,
+                                          height: 10,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
                                         const SizedBox(height: 4),
-                                        ...List.generate(7, (index) => Container(
-                                          width: 2, height: 4, margin: const EdgeInsets.only(bottom: 4), color: Colors.white54
-                                        )),
-                                        const Icon(Icons.near_me, color: Colors.blue, size: 16),
+                                        ...List.generate(
+                                          8,
+                                          (index) => Container(
+                                            width: 2,
+                                            height: 4,
+                                            margin: const EdgeInsets.only(
+                                              bottom: 4,
+                                            ),
+                                            color: Colors.white54,
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.near_me,
+                                          color: Colors.blue,
+                                          size: 17,
+                                        ),
                                       ],
                                     ),
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Home", 
+                                            "Home",
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                           Text(
-                                            "2972 Westheimer Rd. Santa Ana, Illinois 85486", 
+                                            "2972 Westheimer Rd. Santa Ana, Illinois 85486",
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12),
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.white54,
+                                              fontSize: 12,
+                                            ),
                                           ),
                                           const SizedBox(height: 24),
                                           Text(
-                                            "Coffee Shop", 
+                                            "Coffee Shop",
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                           Text(
-                                            "1901 Thornridge Cir. Shiloh, Hawaii 81063", 
+                                            "1901 Thornridge Cir. Shiloh, Hawaii 81063",
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12),
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.white54,
+                                              fontSize: 12,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -330,37 +451,61 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        "Ride Details", 
+                                        "Ride Details",
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+                                        style: GoogleFonts.poppins(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      "Booking ID : 2345", 
-                                      style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12),
+                                      "Booking ID : 2345",
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.white54,
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: 20),
                                 Text(
-                                  "Riden SUV(SI 984-ZWRT)", 
+                                  "Riden SUV(SI 984-ZWRT)",
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.poppins(color: Colors.white.withOpacity(0.9), fontSize: 14, fontWeight: FontWeight.w600),
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white.withOpacity(0.9),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                const Divider(color: Colors.white24, height: 30),
+                                const Divider(
+                                  color: Colors.white24,
+                                  height: 30,
+                                ),
                                 _buildRideDetailRow("Total Distance", "9.8 km"),
-                                const Divider(color: Colors.white24, height: 30),
+                                const Divider(
+                                  color: Colors.white24,
+                                  height: 30,
+                                ),
                                 _buildRideDetailRow("Total Fare", "C\$70"),
-                                const Divider(color: Colors.white24, height: 30),
+                                const Divider(
+                                  color: Colors.white24,
+                                  height: 30,
+                                ),
                                 _buildRideDetailRow("Discount", "C\$0"),
-                                const Divider(color: Colors.white24, height: 30),
+                                const Divider(
+                                  color: Colors.white24,
+                                  height: 30,
+                                ),
                                 _buildRideDetailRow("Payment Method", "Wallet"),
                               ],
                             ),
@@ -370,21 +515,42 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                           // 4. Add Tips Section
                           Align(
                             alignment: Alignment.centerLeft,
-                            child: Text("Add Tips", style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                            child: Text(
+                              "Add Tips",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                           const SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: ["10%", "15%", "20%", "25%"].map((t) => _buildTipButton(t)).toList(),
+                            children: [
+                              "10%",
+                              "15%",
+                              "20%",
+                              "25%",
+                            ].map((t) => _buildTipButton(t)).toList(),
                           ),
                           const SizedBox(height: 16),
                           TextButton(
                             onPressed: () {},
-                            child: Text("Enter Custom Amount", style: GoogleFonts.poppins(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.w600)),
+                            child: Text(
+                              "Enter Custom Amount",
+                              style: GoogleFonts.poppins(
+                                color: Colors.blue,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ],
-                        
-                        SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
+
+                        SizedBox(
+                          height: MediaQuery.of(context).padding.bottom + 20,
+                        ),
                       ],
                     ),
                   ),
@@ -416,16 +582,24 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
       children: [
         Expanded(
           child: Text(
-            title, 
+            title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.poppins(color: Colors.white.withOpacity(0.9), fontSize: 13, fontWeight: FontWeight.w500),
+            style: GoogleFonts.poppins(
+              color: Colors.white.withOpacity(0.9),
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         const SizedBox(width: 8),
         Text(
-          value, 
-          style: GoogleFonts.poppins(color: Colors.white.withOpacity(0.9), fontSize: 13, fontWeight: FontWeight.w500),
+          value,
+          style: GoogleFonts.poppins(
+            color: Colors.white.withOpacity(0.9),
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ],
     );
@@ -439,7 +613,14 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
-      child: Text(text, style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+      child: Text(
+        text,
+        style: GoogleFonts.poppins(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 
@@ -448,19 +629,25 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
       child: Stack(
         children: [
           Positioned(
-             top: 360,
-             left: 100,
-             child: CustomPaint(
-                size: const Size(200, 100),
-                painter: RoutePainterChat(), 
-             ),
+            top: 360,
+            left: 100,
+            child: CustomPaint(
+              size: const Size(200, 100),
+              painter: RoutePainterChat(),
+            ),
           ),
           Positioned(
             top: 395,
             left: 135,
             child: Transform.rotate(
               angle: -0.2, // rotate right
-              child: Image.asset("assets/images/car.png", width: 40, height: 20, fit: BoxFit.contain, color: Colors.white),
+              child: Image.asset(
+                "assets/images/car.png",
+                width: 40,
+                height: 20,
+                fit: BoxFit.contain,
+                color: Colors.white,
+              ),
             ),
           ),
           Positioned(
@@ -515,13 +702,13 @@ class RoutePainterChat extends CustomPainter {
       ..strokeWidth = 4
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
-    
+
     Path path = Path();
-    path.moveTo(0, 0); 
+    path.moveTo(0, 0);
     path.lineTo(size.width * 0.9, size.height * 0.3);
     path.lineTo(size.width * 0.9, size.height * 0.8);
     path.lineTo(size.width - 15, size.height);
-    
+
     canvas.drawPath(path, paint);
   }
 
