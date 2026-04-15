@@ -1,7 +1,8 @@
+import 'package:Riden/Booking/driver_search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'car_selection_view.dart';
-import 'ride_confirmation_view.dart';
 
 class RideDetailView extends StatefulWidget {
   final CarOption selectedCar;
@@ -32,8 +33,37 @@ class _RideDetailViewState extends State<RideDetailView> {
     "Cash",
   ];
 
+  // Promo code state
+  String? _selectedPromo;
+  bool _promoDropdownOpen = false;
+
+  final Map<String, _PromoCode> _promoCodes = {
+    "RIDE10": _PromoCode(
+      code: "RIDE10",
+      label: "10% off your ride",
+      discount: 0.10,
+    ),
+    "FIRST20": _PromoCode(
+      code: "FIRST20",
+      label: "20% off – First ride",
+      discount: 0.20,
+    ),
+    "SAVE5": _PromoCode(
+      code: "SAVE5",
+      label: "\$5 flat discount",
+      discount: 0.00,
+      flatDiscount: 5.0,
+    ),
+    "VIP15": _PromoCode(
+      code: "VIP15",
+      label: "15% VIP discount",
+      discount: 0.15,
+    ),
+  };
+
   @override
   Widget build(BuildContext context) {
+<<<<<<< Updated upstream:lib/home/ridedetail.dart
     return SingleChildScrollView(
       controller: widget.scrollController,
       physics: const ClampingScrollPhysics(),
@@ -73,34 +103,73 @@ class _RideDetailViewState extends State<RideDetailView> {
                   title: "Pickup Location",
                   address: widget.pickupLocation,
                   iconColor: Colors.black,
+=======
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: SingleChildScrollView(
+            controller: widget.scrollController,
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                const SizedBox(height: 12),
+                // Indicator
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+>>>>>>> Stashed changes:lib/Booking/ridedetail.dart
                 ),
-                const SizedBox(height: 12),
-                _buildLocationDetailCard(
-                  icon: Icons.location_on_rounded,
-                  title: "Destination Location",
-                  address: widget.destinationLocation,
-                  iconColor: Colors.black,
+                const SizedBox(height: 20),
+                Text(
+                  "Request Ride",
+                  style: GoogleFonts.poppins(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    letterSpacing: -0.5,
+                  ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 25),
 
-                // Car Detailed Card
-                _buildSectionHeader("Car Details"),
-                const SizedBox(height: 12),
-                _buildCarDetailCard(),
-                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      // Location Cards
+                      _buildSectionHeader("Ride Details"),
+                      const SizedBox(height: 12),
+                      _buildLocationDetailCard(
+                        icon: Icons.gps_fixed_rounded,
+                        title: "Pickup Location",
+                        address: widget.pickupLocation,
+                        iconColor: Colors.black,
+                      ),
+                      const SizedBox(height: 12),
+                      _buildLocationDetailCard(
+                        icon: Icons.location_on_rounded,
+                        title: "Destination Location",
+                        address: widget.destinationLocation,
+                        iconColor: Colors.black,
+                      ),
+                      const SizedBox(height: 24),
 
-                // Payment Card
-                _buildSectionHeader("Payment Method"),
-                const SizedBox(height: 12),
-                _buildPaymentCard(),
-                const SizedBox(height: 24),
+                      // Car Detailed Card
+                      _buildSectionHeader("Car Details"),
+                      const SizedBox(height: 12),
+                      _buildCarDetailCard(),
+                      const SizedBox(height: 24),
 
-                // Discount Card
-                _buildSectionHeader("Discount & Promo"),
-                const SizedBox(height: 12),
-                _buildDiscountCard(),
-                const SizedBox(height: 40),
+                      // Payment Card
+                      _buildSectionHeader("Payment Method"),
+                      const SizedBox(height: 12),
+                      _buildPaymentCard(),
+                      const SizedBox(height: 24),
 
+<<<<<<< Updated upstream:lib/home/ridedetail.dart
                 // Final Button
                 _buildRequestRideButton(),
                 const SizedBox(height: 40),
@@ -109,6 +178,41 @@ class _RideDetailViewState extends State<RideDetailView> {
           ),
         ],
       ),
+=======
+                      // Discount Card
+                      _buildSectionHeader("Discount & Promo"),
+                      const SizedBox(height: 12),
+                      _buildDiscountCard(),
+                      const SizedBox(height: 40),
+
+                      // Final Button Area
+                      SizedBox(
+                        height: 100 + MediaQuery.of(context).padding.bottom,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
+            color: const Color(0xFF030408),
+            padding: EdgeInsets.only(
+              left: 24,
+              right: 24,
+              top: 10,
+              bottom: 20 + MediaQuery.of(context).padding.bottom,
+            ),
+            child: _buildRequestRideButton(),
+          ),
+        ),
+      ],
+>>>>>>> Stashed changes:lib/Booking/ridedetail.dart
     );
   }
 
@@ -149,9 +253,7 @@ class _RideDetailViewState extends State<RideDetailView> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Center(
-              child: Icon(icon, color: iconColor, size: 16),
-            ),
+            child: Center(child: Icon(icon, color: iconColor, size: 16)),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -199,7 +301,8 @@ class _RideDetailViewState extends State<RideDetailView> {
             width: 80,
             height: 50,
             fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) => const Icon(Icons.car_repair, color: Colors.white, size: 40),
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.car_repair, color: Colors.white, size: 40),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -208,11 +311,15 @@ class _RideDetailViewState extends State<RideDetailView> {
               children: [
                 Text(
                   widget.selectedCar.name,
+<<<<<<< Updated upstream:lib/home/ridedetail.dart
                   style: GoogleFonts.poppins(
                     color: Colors.black.withOpacity(0.9),
                     fontSize: 16,
                     
                   ),
+=======
+                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
+>>>>>>> Stashed changes:lib/Booking/ridedetail.dart
                 ),
                 Text(
                   widget.selectedCar.description,
@@ -229,7 +336,7 @@ class _RideDetailViewState extends State<RideDetailView> {
             style: GoogleFonts.poppins(
               color: Colors.black.withOpacity(0.9),
               fontSize: 18,
-              fontWeight: FontWeight.w600  ,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -239,7 +346,7 @@ class _RideDetailViewState extends State<RideDetailView> {
 
   Widget _buildPaymentCard() {
     return Container(
-      height: 45,   
+      height: 45,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.6),
@@ -254,15 +361,26 @@ class _RideDetailViewState extends State<RideDetailView> {
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: _selectedPaymentMethod,
+<<<<<<< Updated upstream:lib/home/ridedetail.dart
                 dropdownColor: Colors.white,  
                 icon: const Icon(Icons.keyboard_arrow_down, color: Colors.black54),
                 style: GoogleFonts.poppins(color: Colors.black , fontSize: 14),
+=======
+                dropdownColor: Colors.black,
+                icon: const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white54,
+                ),
+                style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
+>>>>>>> Stashed changes:lib/Booking/ridedetail.dart
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedPaymentMethod = newValue!;
                   });
                 },
-                items: _paymentMethods.map<DropdownMenuItem<String>>((String value) {
+                items: _paymentMethods.map<DropdownMenuItem<String>>((
+                  String value,
+                ) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -277,6 +395,7 @@ class _RideDetailViewState extends State<RideDetailView> {
   }
 
   Widget _buildDiscountCard() {
+<<<<<<< Updated upstream:lib/home/ridedetail.dart
     return Container(
       height: 45,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -300,6 +419,255 @@ class _RideDetailViewState extends State<RideDetailView> {
           const Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: 14),
         ],
       ),
+=======
+    final applied = _selectedPromo != null ? _promoCodes[_selectedPromo] : null;
+
+    return Column(
+      children: [
+        // ── Dropdown trigger ──────────────────────────────────────────────
+        GestureDetector(
+          onTap: () => setState(() => _promoDropdownOpen = !_promoDropdownOpen),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: applied != null
+                    ? const Color(0xFF4CAF50).withOpacity(0.7)
+                    : Colors.white.withOpacity(0.15),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  applied != null
+                      ? Icons.check_circle_rounded
+                      : Icons.confirmation_number_outlined,
+                  color: applied != null
+                      ? const Color(0xFF4CAF50)
+                      : Colors.white54,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: applied != null
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              applied.code,
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              applied.label,
+                              style: GoogleFonts.poppins(
+                                color: const Color(0xFF4CAF50),
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(
+                          "Select a promo code",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white60,
+                            fontSize: 13,
+                          ),
+                        ),
+                ),
+                if (applied != null)
+                  GestureDetector(
+                    onTap: () => setState(() {
+                      _selectedPromo = null;
+                      _promoDropdownOpen = false;
+                    }),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: Colors.red.withOpacity(0.4)),
+                      ),
+                      child: Text(
+                        "Remove",
+                        style: GoogleFonts.poppins(
+                          color: Colors.redAccent,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  AnimatedRotation(
+                    turns: _promoDropdownOpen ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: Colors.white54,
+                      size: 22,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+
+        // ── Promo list panel ──────────────────────────────────────────────
+        AnimatedCrossFade(
+          duration: const Duration(milliseconds: 250),
+          crossFadeState: _promoDropdownOpen
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
+          firstChild: Container(
+            margin: const EdgeInsets.only(top: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0D1117),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white.withOpacity(0.12)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Column(
+              children: _promoCodes.values.map((promo) {
+                final isSelected = _selectedPromo == promo.code;
+                return Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => setState(() {
+                      _selectedPromo = promo.code;
+                      _promoDropdownOpen = false;
+                    }),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? const Color(0xFF4CAF50).withOpacity(0.08)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? const Color(0xFF4CAF50).withOpacity(0.2)
+                                  : Colors.white.withOpacity(0.07),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.local_offer_rounded,
+                                color: isSelected
+                                    ? const Color(0xFF4CAF50)
+                                    : Colors.white54,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  promo.code,
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  promo.label,
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white54,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (isSelected)
+                            const Icon(
+                              Icons.check_circle_rounded,
+                              color: Color(0xFF4CAF50),
+                              size: 18,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          secondChild: const SizedBox.shrink(),
+        ),
+
+        // ── Applied discount badge ─────────────────────────────────────────
+        if (applied != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF4CAF50).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: const Color(0xFF4CAF50).withOpacity(0.3),
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.savings_rounded,
+                    color: Color(0xFF4CAF50),
+                    size: 16,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      applied.flatDiscount > 0
+                          ? "You save \$${applied.flatDiscount.toStringAsFixed(0)} with ${applied.code}!"
+                          : "You save ${(applied.discount * 100).toStringAsFixed(0)}% with ${applied.code}!",
+                      style: GoogleFonts.poppins(
+                        color: const Color(0xFF4CAF50),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
+>>>>>>> Stashed changes:lib/Booking/ridedetail.dart
     );
   }
 
@@ -324,7 +692,7 @@ class _RideDetailViewState extends State<RideDetailView> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const RideConfirmationView(),
+                  builder: (context) => const DriverSearchView(),
                 ),
               );
             },
@@ -343,4 +711,19 @@ class _RideDetailViewState extends State<RideDetailView> {
       ),
     );
   }
+}
+
+// ── Data model ────────────────────────────────────────────────────────────────
+class _PromoCode {
+  final String code;
+  final String label;
+  final double discount; // percentage  (0.10 = 10 %)
+  final double flatDiscount; // flat dollar amount
+
+  const _PromoCode({
+    required this.code,
+    required this.label,
+    required this.discount,
+    this.flatDiscount = 0.0,
+  });
 }
