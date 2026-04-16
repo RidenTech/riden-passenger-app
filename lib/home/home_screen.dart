@@ -1,16 +1,17 @@
 // ignore_for_file: deprecated_member_use, avoid_print
-import 'package:Riden/widgets/background_image.dart';
-import 'package:Riden/widgets/riden_bottom_nav.dart';
-import 'package:Riden/account/account_screen.dart';
-import 'package:Riden/Booking/ride_request_view.dart';
-import 'package:Riden/controllers/auth_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
 import 'dart:async';
 import 'dart:math';
+
+import 'package:Riden/Booking/ride_request_view.dart';
+import 'package:Riden/controllers/auth_controller.dart';
+import 'package:Riden/support/support.dart' hide RidenBottomNav;
+import 'package:Riden/widgets/background_image.dart';
+import 'package:Riden/widgets/riden_bottom_nav.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -212,7 +213,9 @@ class _HomeScreenState extends State<HomeScreen> {
       });
 
       if (mounted && _mapController != null) {
-        _mapController!.animateCamera(CameraUpdate.newLatLng(_currentLocation!));
+        _mapController!.animateCamera(
+          CameraUpdate.newLatLng(_currentLocation!),
+        );
       }
     } catch (e) {
       print('Error getting location: $e');
@@ -872,9 +875,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onTap: () {
                                   if (_currentLocation != null) {
                                     _mapController?.animateCamera(
-                                      CameraUpdate.newLatLng(
-                                        _currentLocation!,
-                                      ),
+                                      CameraUpdate.newLatLng(_currentLocation!),
                                     );
                                   }
                                 },
@@ -913,12 +914,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: RidenBottomNav(
                     selectedIndex: _selectedNavIndex,
                     onItemSelected: (index) {
-                      if (index == 3) {
+                      if (index == 1) {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const AccountScreen(),
-                          ),
+                          MaterialPageRoute(builder: (_) => const Support()),
                         );
                       } else {
                         setState(() {
