@@ -248,16 +248,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<BitmapDescriptor> _createPointerMarker() async {
-    try {
-      return await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(size: Size(64, 64)),
-        'assets/images/pointer.png',
-      );
-    } catch (e) {
-      // Fallback keeps map usable when custom marker asset is missing.
-      print('Pointer marker asset missing, using default marker: $e');
-      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
-    }
+    // Avoid app crash from invalid/non-bitmap marker assets on some devices.
+    return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
   }
 
   Future<void> _addUserMarker() async {
