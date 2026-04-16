@@ -1,4 +1,5 @@
 import 'package:Riden/account/Aboutus/about_us.dart';
+import 'package:Riden/account/App_setting/App_setting.dart';
 import 'package:Riden/account/Complaints/copmplaints_tickets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -190,7 +191,7 @@ class AccountScreen extends StatelessWidget {
                               menuFontSize,
                               menuIconSize,
                               arrowIconSize,
-                              onTap: () => Get.to(() => const AboutUsScreen()),
+                              onTap: () => Get.to(() => const AboutUs()),
                             ),
                             _buildDivider(),
                             _buildMenuRow(
@@ -199,6 +200,8 @@ class AccountScreen extends StatelessWidget {
                               menuFontSize,
                               menuIconSize,
                               arrowIconSize,
+                              onTap: () =>
+                                  Get.to(() => const AppSettingsScreen()),
                             ),
                             _buildDivider(),
                             _buildMenuRow(
