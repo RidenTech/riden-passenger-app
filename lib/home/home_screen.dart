@@ -452,6 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // Main Home Content (Wrapped in SafeArea)
             if (!_showRideSelection)
               SafeArea(
+                bottom: false,
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Column(
@@ -793,102 +794,106 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
-                      // Map Section with Fixed Height
+                      // Map section starts under cards and extends behind nav.
                       SizedBox(
-                        height: 300,
-                        child: Container(
-                          width: double.infinity,
-                          decoration: const BoxDecoration(
-                            color: Colors.transparent,
-                          ),
-                          margin: const EdgeInsets.only(bottom: 0),
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                            ),
-                            child: Stack(
-                              children: [
-                                // Google Map
-                                _isLoadingLocation
-                                    ? Container(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
-                                          ),
+                        height: MediaQuery.of(context).size.height * 0.46,
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: _isLoadingLocation
+                                  ? Container(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      child: const Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
                                         ),
-                                      )
-                                    : _currentLocation == null
-                                    ? Container(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        child: const Center(
-                                          child: Text(
-                                            'Unable to get location',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : GoogleMap(
-                                        onMapCreated: (controller) async {
-                                          _mapController = controller;
-                                          await _loadMapStyle();
-                                          _mapController!.animateCamera(
-                                            CameraUpdate.newLatLng(
-                                              _currentLocation!,
-                                            ),
-                                          );
-                                        },
-                                        initialCameraPosition: CameraPosition(
-                                          target:
-                                              _currentLocation ??
-                                              const LatLng(37.7749, -122.4194),
-                                          zoom: 15,
-                                        ),
-                                        markers: _markers,
-                                        myLocationEnabled: false,
-                                        myLocationButtonEnabled: false,
-                                        compassEnabled: true,
-                                        mapToolbarEnabled: false,
-                                        zoomControlsEnabled: false,
                                       ),
-
-                                // Location Icon - Repositioned for Nav Overlap
-                                Positioned(
-                                  bottom: 100,
-                                  right: 20,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (_currentLocation != null) {
-                                        _mapController?.animateCamera(
+                                    )
+                                  : _currentLocation == null
+                                  ? Container(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      child: const Center(
+                                        child: Text(
+                                          'Unable to get location',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    )
+                                  : GoogleMap(
+                                      onMapCreated: (controller) async {
+                                        _mapController = controller;
+                                        await _loadMapStyle();
+                                        _mapController!.animateCamera(
                                           CameraUpdate.newLatLng(
                                             _currentLocation!,
                                           ),
                                         );
-                                      }
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.8),
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: Colors.white10,
-                                        ),
+                                      },
+                                      initialCameraPosition: CameraPosition(
+                                        target:
+                                            _currentLocation ??
+                                            const LatLng(37.7749, -122.4194),
+                                        zoom: 15,
                                       ),
-                                      child: const Icon(
-                                        Icons.my_location_rounded,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
+                                      markers: _markers,
+                                      myLocationEnabled: false,
+                                      myLocationButtonEnabled: false,
+                                      compassEnabled: true,
+                                      mapToolbarEnabled: false,
+                                      zoomControlsEnabled: false,
+                                    ),
+                            ),
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              top: 0,
+                              child: IgnorePointer(
+                                child: Container(
+                                  height: 150,
+                                  decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Color(0xFF060B16),
+                                        Color(0xB3060B16),
+                                        Color(0x00060B16),
+                                      ],
+                                      stops: [0.0, 0.45, 1.0],
                                     ),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                            Positioned(
+                              bottom: 115,
+                              right: 20,
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (_currentLocation != null) {
+                                    _mapController?.animateCamera(
+                                      CameraUpdate.newLatLng(
+                                        _currentLocation!,
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.8),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: Colors.white10),
+                                  ),
+                                  child: const Icon(
+                                    Icons.my_location_rounded,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

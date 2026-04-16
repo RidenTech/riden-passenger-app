@@ -1,15 +1,13 @@
 // sign_up_choice_screen.dart
 // ignore_for_file: use_super_parameters, deprecated_member_use
 
-import 'dart:ui';
-
 import 'package:Riden/auth/sign_up_screen.dart';
-import 'package:Riden/theme/app_colors.dart';
+import 'package:Riden/theme/app_colors.dart'; // ← new import
 import 'package:Riden/widgets/glass_field.dart';
-import 'package:Riden/widgets/riden_logo.dart'; // ← new import
+import 'package:Riden/widgets/riden_logo.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SignUpChoiceScreen extends StatelessWidget {
   const SignUpChoiceScreen({super.key});
@@ -133,12 +131,7 @@ class _SignUpIconButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (asset != null)
-              Image.asset(
-                asset!,
-                width: 24,
-                height: 24,
-                color: Colors.white,
-              )
+              Image.asset(asset!, width: 24, height: 24, color: Colors.white)
             else
               Icon(icon, size: 24, color: Colors.white),
             const SizedBox(width: 14),
