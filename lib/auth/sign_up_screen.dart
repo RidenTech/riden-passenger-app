@@ -1,5 +1,5 @@
 import 'package:Riden/auth/sign_in_screen.dart';
-import 'package:Riden/home/home_screen.dart';
+import 'package:Riden/controllers/auth_controller.dart';
 import 'package:Riden/widgets/background_image.dart';
 import 'package:Riden/widgets/custom_button.dart';
 import 'package:Riden/widgets/custom_text_field.dart';
@@ -24,6 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
+  late AuthController authController;
 
   String _selectedCountryName = 'Pakistan'; // Default: Pakistan
   String _selectedCountryCode = '+92';
@@ -37,6 +38,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    authController = Get.put(AuthController());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BackgroundImage(
       child: Scaffold(
@@ -47,9 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               return SingleChildScrollView(
                 physics: const ClampingScrollPhysics(),
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight,
-                  ),
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
                     child: Column(
                       children: [
@@ -64,10 +69,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 style: GoogleFonts.audiowide(
                                   fontSize: 45,
                                   fontWeight: FontWeight.w400,
-                                  color: const Color(0xFF819ABE),
+                                  color: Colors.white,
                                   height: 1.0,
                                 ),
                               ),
+                              const SizedBox(height: 12),
                             ],
                           ),
                         ),
@@ -88,18 +94,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               const SizedBox(height: 16),
                               CustomTextField(
                                 label: 'Last  Name',
-                                hintText: 'Enter Your Last Name', 
+                                hintText: 'Enter Your Last Name',
                                 controller: _lastNameController,
                               ),
                               const SizedBox(height: 16),
                               CustomDropdownField(
                                 label: 'Gender ',
-                                hintText: 'Select Your Gender', 
+                                hintText: 'Select Your Gender',
                                 value: _selectedGender,
                                 items: ['Male', 'Female', 'Other']
-                                    .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                                    .map(
+                                      (g) => DropdownMenuItem(
+                                        value: g,
+                                        child: Text(g),
+                                      ),
+                                    )
                                     .toList(),
-                                onChanged: (v) => setState(() => _selectedGender = v),
+                                onChanged: (v) =>
+                                    setState(() => _selectedGender = v),
                               ),
                               const SizedBox(height: 16),
                               CustomTextField(
@@ -117,13 +129,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             value: country['name'],
                                             child: Text(
                                               '${country['flag']} ${country['code']}',
-                                              style: const TextStyle(color: Colors.white, fontSize: 13),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 13,
+                                              ),
                                             ),
                                           );
                                         }).toList(),
                                         onChanged: (value) => setState(() {
                                           _selectedCountryName = value!;
-                                          _selectedCountryCode = _countryCodes.firstWhere((c) => c['name'] == value)['code']!;
+                                          _selectedCountryCode = _countryCodes
+                                              .firstWhere(
+                                                (c) => c['name'] == value,
+                                              )['code']!;
                                         }),
                                         dropdownColor: const Color(0xFF1E1E1E),
                                         icon: const SizedBox.shrink(),
@@ -133,7 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                               ),
                               const SizedBox(height: 16),
-                               CustomTextField(
+                              CustomTextField(
                                 label: 'Email',
                                 hintText: 'Enter your email here',
                                 controller: _emailController,
@@ -146,11 +164,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 obscureText: _obscurePassword,
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                    _obscurePassword
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
                                     color: Colors.white54,
                                     size: 20,
                                   ),
-                                  onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                  onPressed: () => setState(
+                                    () => _obscurePassword = !_obscurePassword,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -161,25 +183,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 obscureText: _obscurePassword,
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                    _obscurePassword
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
                                     color: Colors.white54,
                                     size: 20,
                                   ),
-                                  onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                  onPressed: () => setState(
+                                    () => _obscurePassword = !_obscurePassword,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        ), const SizedBox(height: 16),
+                        ),
+                        const SizedBox(height: 16),
 
                         const Spacer(flex: 2),
 
                         // Sign Up Button
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24),
-                          child: CustomButton(
-                            text: 'Sign Up',
-                            onPressed: () => Get.offAll(() => const HomeScreen()),
+                          child: Obx(
+                            () => CustomButton(
+                              text: authController.isLoading.value
+                                  ? 'Signing Up...'
+                                  : 'Sign Up',
+                              onPressed: () {
+                                if (!authController.isLoading.value) {
+                                  _handleSignUp();
+                                }
+                              },
+                            ),
                           ),
                         ),
 
@@ -190,11 +225,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: RichText(
                             text: TextSpan(
                               text: "Already have an account? ",
-                              style: GoogleFonts.poppins(color: Colors.white, fontSize: 15),
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
                               children: [
                                 TextSpan(
                                   text: 'Sign In',
-                                  recognizer: TapGestureRecognizer()..onTap = () => Get.to(() => const SignInScreen()),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () =>
+                                        Get.to(() => const SignInScreen()),
                                   style: GoogleFonts.poppins(
                                     color: Color(0xFF6395FF),
                                     fontWeight: FontWeight.w600,
@@ -215,5 +255,73 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleSignUp() async {
+    // Validate all fields
+    if (_firstNameController.text.isEmpty) {
+      Get.snackbar('Error', 'First name is required');
+      return;
+    }
+    if (_lastNameController.text.isEmpty) {
+      Get.snackbar('Error', 'Last name is required');
+      return;
+    }
+    if (_emailController.text.isEmpty) {
+      Get.snackbar('Error', 'Email is required');
+      return;
+    }
+    if (!_emailController.text.contains('@')) {
+      Get.snackbar('Error', 'Please enter a valid email');
+      return;
+    }
+    if (_phoneNumberController.text.isEmpty) {
+      Get.snackbar('Error', 'Phone number is required');
+      return;
+    }
+    if (_selectedGender == null) {
+      Get.snackbar('Error', 'Please select a gender');
+      return;
+    }
+    if (_passwordController.text.isEmpty) {
+      Get.snackbar('Error', 'Password is required');
+      return;
+    }
+    if (_passwordController.text.length < 8) {
+      Get.snackbar('Error', 'Password must be at least 8 characters');
+      return;
+    }
+    if (_passwordController.text != _confirmPasswordController.text) {
+      Get.snackbar('Error', 'Passwords do not match');
+      return;
+    }
+
+    // Call register with all data
+    final fullPhone = _selectedCountryCode + _phoneNumberController.text;
+    final success = await authController.register(
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+      passwordConfirmation: _confirmPasswordController.text,
+      phone: fullPhone,
+      gender: _selectedGender!,
+    );
+
+    if (success) {
+      // Navigate to sign in after successful registration
+      Get.offAll(() => const SignInScreen());
+    }
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _phoneNumberController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 }
