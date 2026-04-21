@@ -209,6 +209,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               text: authController.isLoading.value
                                   ? 'Signing Up...'
                                   : 'Sign Up',
+                              isBlue: true,
+                              validateFields: _validateFields,
                               onPressed: () {
                                 if (!authController.isLoading.value) {
                                   _handleSignUp();
@@ -312,6 +314,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // Navigate to sign in after successful registration
       Get.offAll(() => const SignInScreen());
     }
+  }
+
+  /// Validate all fields and return true if valid
+  Future<bool> _validateFields() async {
+    if (_firstNameController.text.isEmpty) {
+      Get.snackbar('Error', 'First name is required');
+      return false;
+    }
+    if (_lastNameController.text.isEmpty) {
+      Get.snackbar('Error', 'Last name is required');
+      return false;
+    }
+    if (_emailController.text.isEmpty) {
+      Get.snackbar('Error', 'Email is required');
+      return false;
+    }
+    if (!_emailController.text.contains('@')) {
+      Get.snackbar('Error', 'Please enter a valid email');
+      return false;
+    }
+    if (_phoneNumberController.text.isEmpty) {
+      Get.snackbar('Error', 'Phone number is required');
+      return false;
+    }
+    if (_selectedGender == null) {
+      Get.snackbar('Error', 'Please select a gender');
+      return false;
+    }
+    if (_passwordController.text.isEmpty) {
+      Get.snackbar('Error', 'Password is required');
+      return false;
+    }
+    if (_passwordController.text.length < 8) {
+      Get.snackbar('Error', 'Password must be at least 8 characters');
+      return false;
+    }
+    if (_passwordController.text != _confirmPasswordController.text) {
+      Get.snackbar('Error', 'Passwords do not match');
+      return false;
+    }
+    return true;
   }
 
   @override

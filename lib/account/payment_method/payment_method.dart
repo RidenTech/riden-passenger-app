@@ -3,6 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/riden_top_bar.dart';
+import '../../widgets/riden_map_view.dart';
+import '../../home/home_screen.dart';
+import '../../controllers/navigation_controller.dart';
 import 'add_new_card.dart';
 
 class PaymentMethodScreen extends StatelessWidget {
@@ -24,11 +27,7 @@ class PaymentMethodScreen extends StatelessWidget {
             left: 0,
             right: 0,
             height: screenHeight * 0.50,
-            child: Image.asset(
-              "assets/images/map.png",
-              fit: BoxFit.cover,
-              opacity: const AlwaysStoppedAnimation(0.6),
-            ),
+            child: RidenMapView(mapHeight: screenHeight * 0.50),
           ),
 
           // Branding & Top Bar
@@ -37,9 +36,18 @@ class PaymentMethodScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Column(
                 children: [
-                   const RidenBranding(),
-                   const SizedBox(height: 15),
-                   RidenTopBar(onBack: () => Navigator.pop(context)),
+                  const RidenBranding(),
+                  const SizedBox(height: 15),
+                  RidenTopBar(
+                    onBack: () {
+                      Get.find<NavigationController>().setSelectedIndex(0);
+                      Get.offAll(
+                        () => const HomeScreen(),
+                        transition: Transition.fadeIn,
+                        duration: const Duration(milliseconds: 600),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -73,7 +81,7 @@ class PaymentMethodScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     Text(
                       "Payment Methods",
                       style: GoogleFonts.poppins(
@@ -82,40 +90,73 @@ class PaymentMethodScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 60),
 
                     // Methods Container
                     Expanded(
                       child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildMethodsSection(
-                              title: "Primary Methods",
-                              iconPath: "assets/images/visa.png", // Fallback to icon if missing
-                              cardName: "Visa",
-                              cardNumber: "******234",
-                              isPrimary: true,
-                            ),
-                            const Divider(color: Colors.white10, height: 1),
-                            _buildMethodsSection(
-                              title: "Other Methods",
-                              iconPath: "assets/images/mastercard.png",
-                              cardName: "Master Card",
-                              cardNumber: "******234",
-                              isPrimary: false,
-                            ),
-                            const SizedBox(height: 40),
-
-                            // Add New Method Button
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: PrimaryButton(
-                                width: 200,
-                                text: 'Add New Method',
-                                icon: const Icon(Icons.add, color: Colors.white, size: 18),
-                                onPressed: () => Get.to(() => const AddNewCardScreen()),
+                            // ── Recent Methods ─────────────────────────────
+                            Text(
+                              "Recent Methods",
+                              style: GoogleFonts.poppins(
+                                color: const Color(0xFF2979FF),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
                               ),
+                            ),
+                            const SizedBox(height: 12),
+                            _buildPaymentButton(
+                              icon: Icons.apple,
+                              label: "Apple Pay",
+                              width: size.width * 0.45,
+                              onTap: () {},
+                            ),
+
+                            const SizedBox(height: 24),
+
+                            // ── Other Methods ──────────────────────────────
+                            Text(
+                              "Other Methods",
+                              style: GoogleFonts.poppins(
+                                color: const Color(0xFF2979FF),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            GridView.count(
+                              crossAxisCount: 2,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisSpacing: 14,
+                              mainAxisSpacing: 14,
+                              childAspectRatio: 2.5,
+                              children: [
+                                _buildPaymentButton(
+                                  icon: Icons.credit_card_rounded,
+                                  label: "Add Card",
+                                  onTap: () => Get.to(() => const AddNewCardScreen()),
+                                ),
+                                _buildPaymentButton(
+                                  icon: Icons.account_balance_wallet_outlined,
+                                  label: "Google Pay",
+                                  onTap: () {},
+                                ),
+                                _buildPaymentButton(
+                                  icon: Icons.paypal_outlined,
+                                  label: "Paypal",
+                                  onTap: () {},
+                                ),
+                                _buildPaymentButton(
+                                  icon: Icons.apple,
+                                  label: "Apple Pay",
+                                  onTap: () {},
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 30),
                           ],
@@ -132,76 +173,47 @@ class PaymentMethodScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMethodsSection({
-    required String title,
-    required String iconPath,
-    required String cardName,
-    required String cardNumber,
-    required bool isPrimary,
+  Widget _buildPaymentButton({
+    required IconData icon,
+    required String label,
+    VoidCallback? onTap,
+    double? width,
   }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        borderRadius: isPrimary 
-            ? const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
-            : const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: width ?? double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white10),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.15),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: Colors.blue[300], size: 18),
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Container(
-                width: 50,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(4),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Text(
+                label,
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
                 ),
-                child: Center(
-                  child: title.contains("Primary") 
-                    ? const Text("VISA", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 10))
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(width: 10, height: 10, decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle)),
-                          const SizedBox(width: 2),
-                          Container(width: 10, height: 10, decoration: const BoxDecoration(color: Colors.orange, shape: BoxShape.circle)),
-                        ],
-                      ),
-                ),
+                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      cardName,
-                      style: GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
-                    ),
-                    Text(
-                      cardNumber,
-                      style: GoogleFonts.poppins(color: Colors.white54, fontSize: 12),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.more_vert, color: Colors.white54),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

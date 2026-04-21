@@ -112,17 +112,15 @@ class _SignInScreenState extends State<SignInScreen> {
               // Sign In Button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Obx(
-                  () => CustomButton(
-                    text: authController.isLoading.value
-                        ? 'Signing In...'
-                        : 'Sign In',
-                    onPressed: () {
-                      if (!authController.isLoading.value) {
-                        _handleLogin();
-                      }
-                    },
-                  ),
+                child: CustomButton(
+                  text: 'Sign In',
+                  isBlue: true,
+                  validateFields: _validateFields,
+                  onPressed: () {
+                    if (!authController.isLoading.value) {
+                      _handleLogin();
+                    }
+                  },
                 ),
               ),
               const SizedBox(height: 24),
@@ -239,6 +237,23 @@ class _SignInScreenState extends State<SignInScreen> {
     if (success) {
       Get.offAll(() => const HomeScreen());
     }
+  }
+
+  /// Validate fields and return true if valid
+  Future<bool> _validateFields() async {
+    if (_emailController.text.isEmpty) {
+      Get.snackbar('Error', 'Email is required');
+      return false;
+    }
+    if (_passwordController.text.isEmpty) {
+      Get.snackbar('Error', 'Password is required');
+      return false;
+    }
+    if (_passwordController.text.length < 8) {
+      Get.snackbar('Error', 'Password must be at least 8 characters');
+      return false;
+    }
+    return true;
   }
 
   @override

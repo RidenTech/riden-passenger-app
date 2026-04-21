@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/widgets/riden_map_view.dart';
+import 'package:Riden/home/notification_screen.dart';
+import 'package:get/get.dart';
 
 class TermsScreen extends StatelessWidget {
   const TermsScreen({super.key});
@@ -58,16 +61,7 @@ class TermsScreen extends StatelessWidget {
       body: Stack(
         children: [
           // ── Map Background ───────────────────────────────────────────
-          Positioned.fill(
-            child: Container(
-              color: Colors.black,
-              child: Image.asset(
-                "assets/images/map.png",
-                fit: BoxFit.cover,
-                opacity: const AlwaysStoppedAnimation(0.6),
-              ),
-            ),
-          ),
+          Positioned.fill(child: RidenMapView(mapHeight: double.infinity)),
 
           // ── Top Bar ──────────────────────────────────────────────────
           SafeArea(
@@ -106,37 +100,41 @@ class TermsScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.25),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white24,
-                                width: 1,
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.notifications_none_outlined,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                          Positioned(
-                            right: 2,
-                            top: 2,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
+                      // Notification bell
+                      GestureDetector(
+                        onTap: () => Get.to(() => const NotificationScreen()),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
                                 shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

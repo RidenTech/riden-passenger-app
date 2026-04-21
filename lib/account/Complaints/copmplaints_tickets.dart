@@ -1,5 +1,6 @@
 import 'package:Riden/account/Complaints/complaints_against-driver.dart';
 import 'package:Riden/widgets/glass_field.dart';
+import 'package:Riden/widgets/riden_map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,12 +23,7 @@ class ComplaintsTicketScreen extends StatelessWidget {
             right: 0,
             height:
                 screenHeight * 0.18, // Extending slightly for better overlap
-            child: Image.asset(
-              'assets/images/map.png',
-              fit: BoxFit.cover,
-              color: Colors.black.withOpacity(0.6),
-              colorBlendMode: BlendMode.darken,
-            ),
+            child: RidenMapView(mapHeight: screenHeight * 0.18),
           ),
 
           // 2. Custom Header (Logo, Back, Notifications)

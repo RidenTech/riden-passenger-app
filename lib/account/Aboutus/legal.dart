@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/widgets/riden_map_view.dart';
+import 'package:Riden/home/notification_screen.dart';
+import 'package:get/get.dart';
 
 class LegalScreen extends StatelessWidget {
   const LegalScreen({super.key});
@@ -58,16 +61,7 @@ class LegalScreen extends StatelessWidget {
       body: Stack(
         children: [
           // ── Map Background ───────────────────────────────────────────
-          Positioned.fill(
-            child: Container(
-              color: Colors.black,
-              child: Image.asset(
-                "assets/images/map.png",
-                fit: BoxFit.cover,
-                opacity: const AlwaysStoppedAnimation(0.6),
-              ),
-            ),
-          ),
+          Positioned.fill(child: RidenMapView(mapHeight: double.infinity)),
 
           // ── Top Bar ──────────────────────────────────────────────────
           SafeArea(
@@ -99,39 +93,47 @@ class LegalScreen extends StatelessWidget {
                             color: Colors.white,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.arrow_back,
-                              color: Colors.black, size: 20),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.black,
+                            size: 20,
+                          ),
                         ),
                       ),
-                      Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.25),
-                              shape: BoxShape.circle,
-                              border:
-                                  Border.all(color: Colors.white24, width: 1),
-                            ),
-                            child: const Icon(
-                              Icons.notifications_none_outlined,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                          Positioned(
-                            right: 2,
-                            top: 2,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
+                      GestureDetector(
+                        onTap: () => Get.to(() => const NotificationScreen()),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
                                 shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -183,17 +185,16 @@ class LegalScreen extends StatelessWidget {
                   Expanded(
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 8),
+                        horizontal: 20,
+                        vertical: 8,
+                      ),
                       child: Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: const Color(0xFF1A1A1A),
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.white12,
-                            width: 1,
-                          ),
+                          border: Border.all(color: Colors.white12, width: 1),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,10 +211,7 @@ class LegalScreen extends StatelessWidget {
                             const SizedBox(height: 20),
 
                             // Divider
-                            Container(
-                              height: 1,
-                              color: Colors.white10,
-                            ),
+                            Container(height: 1, color: Colors.white10),
                             const SizedBox(height: 20),
 
                             // Sections
@@ -236,48 +234,48 @@ class LegalScreen extends StatelessWidget {
   }
 
   Widget _buildSection(String title, String body) => Padding(
-        padding: const EdgeInsets.only(bottom: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    padding: const EdgeInsets.only(bottom: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 4,
-                  height: 16,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF2979FF), Color(0xFF1565C0)],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+            Container(
+              width: 4,
+              height: 16,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF2979FF), Color(0xFF1565C0)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              body,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                color: Colors.white60,
-                height: 1.7,
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                title,
+                style: GoogleFonts.poppins(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
             ),
           ],
         ),
-      );
+        const SizedBox(height: 8),
+        Text(
+          body,
+          style: GoogleFonts.poppins(
+            fontSize: 12,
+            color: Colors.white60,
+            height: 1.7,
+          ),
+        ),
+      ],
+    ),
+  );
 }

@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/widgets/shared_map_widget.dart';
+import 'package:Riden/home/notification_screen.dart';
+import 'package:get/get.dart';
 
 import 'ride_complete_screen.dart';
 import 'sos_screen.dart';
@@ -16,6 +19,9 @@ class ActiveRideScreen extends StatefulWidget {
 class _ActiveRideScreenState extends State<ActiveRideScreen> {
   double _sheetPosition = 0.7;
   Timer? _timer;
+  String? _selectedTip;
+  double? _customTip;
+  final TextEditingController _customTipController = TextEditingController();
 
   @override
   void initState() {
@@ -42,13 +48,9 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Map Background
+          // Map Background (Shared Global Map)
           Positioned.fill(
-            child: Image.asset(
-              "assets/images/map.png",
-              fit: BoxFit.cover,
-              opacity: const AlwaysStoppedAnimation(0.6),
-            ),
+            child: SharedMapWidget(height: MediaQuery.of(context).size.height),
           ),
           _buildMapOverlay(),
           // Top Action Buttons
@@ -100,20 +102,26 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                       ),
                       Stack(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.25),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white24,
-                                width: 1,
-                              ),
+                          GestureDetector(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const NotificationScreen()),
                             ),
-                            child: const Icon(
-                              Icons.notifications_none_outlined,
-                              color: Colors.white,
-                              size: 20,
+                            child: Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
+                              ),
                             ),
                           ),
                           Positioned(
@@ -536,9 +544,11 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                           ),
                           const SizedBox(height: 16),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () => _showCustomTipDialog(),
                             child: Text(
-                              "Enter Custom Amount",
+                              _customTip != null
+                                  ? "Custom Tip: \$${_customTip!.toStringAsFixed(2)}"
+                                  : "Enter Custom Amount",
                               style: GoogleFonts.poppins(
                                 color: Colors.blue,
                                 fontSize: 14,
@@ -546,6 +556,44 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
                               ),
                             ),
                           ),
+
+                          if (_selectedTip != null || _customTip != null) ...[
+                            const SizedBox(height: 20),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 56,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  // Handle Tip Submission
+                                  Get.snackbar(
+                                    "Success",
+                                    "Tip of ${_selectedTip ?? '\$${_customTip!.toStringAsFixed(2)}'} added!",
+                                    backgroundColor: Colors.green,
+                                    colorText: Colors.white,
+                                    snackPosition: SnackPosition.BOTTOM,
+                                  );
+                                  setState(() {
+                                    _selectedTip = null;
+                                    _customTip = null;
+                                  });
+                                },
+                                child: Text(
+                                  "Submit Tip",
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
 
                         SizedBox(
@@ -606,20 +654,79 @@ class _ActiveRideScreenState extends State<ActiveRideScreen> {
   }
 
   Widget _buildTipButton(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
-      ),
-      child: Text(
-        text,
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
+    bool isSelected = _selectedTip == text;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedTip = isSelected ? null : text;
+          _customTip = null;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue : Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? Colors.blue : Colors.white.withOpacity(0.15),
+            width: 1,
+          ),
         ),
+        child: Text(
+          text,
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCustomTipDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A2E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          "Enter Custom Tip",
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: TextField(
+          controller: _customTipController,
+          keyboardType: TextInputType.number,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: "Enter amount",
+            hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel", style: TextStyle(color: Colors.white54)),
+          ),
+          TextButton(
+            onPressed: () {
+              if (_customTipController.text.isNotEmpty) {
+                setState(() {
+                  _customTip = double.tryParse(_customTipController.text);
+                  _selectedTip = null;
+                });
+                Navigator.pop(context);
+              }
+            },
+            child: const Text("Done", style: TextStyle(color: Colors.blue)),
+          ),
+        ],
       ),
     );
   }

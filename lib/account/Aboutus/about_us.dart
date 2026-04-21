@@ -1,9 +1,16 @@
 import 'package:Riden/account/Aboutus/FAQ%60S.dart';
 import 'package:Riden/account/Aboutus/Terms_&_conditions.dart';
 import 'package:Riden/account/Aboutus/legal.dart';
+import 'package:Riden/account/account_screen.dart';
+import 'package:Riden/Activity/activities.dart';
+import 'package:Riden/home/home_screen.dart';
+import 'package:Riden/support/support.dart';
 import 'package:Riden/widgets/riden_bottom_nav.dart';
+import 'package:Riden/widgets/riden_map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/home/notification_screen.dart';
+import 'package:get/get.dart';
 
 class AboutUs extends StatefulWidget {
   const AboutUs({super.key});
@@ -55,16 +62,7 @@ class _AboutUsState extends State<AboutUs> {
       body: Stack(
         children: [
           // ── Map Background ───────────────────────────────────────────
-          Positioned.fill(
-            child: Container(
-              color: Colors.black,
-              child: Image.asset(
-                "assets/images/map.png",
-                fit: BoxFit.cover,
-                opacity: const AlwaysStoppedAnimation(0.6),
-              ),
-            ),
-          ),
+          Positioned.fill(child: RidenMapView(mapHeight: double.infinity)),
 
           // ── Top Bar ──────────────────────────────────────────────────
           SafeArea(
@@ -105,37 +103,40 @@ class _AboutUsState extends State<AboutUs> {
                         ),
                       ),
                       // Notification bell
-                      Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.25),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white24,
-                                width: 1,
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.notifications_none_outlined,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                          Positioned(
-                            right: 2,
-                            top: 2,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
+                      GestureDetector(
+                        onTap: () => Get.to(() => const NotificationScreen()),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
                                 shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -255,7 +256,33 @@ class _AboutUsState extends State<AboutUs> {
                     selectedIndex: _selectedIndex,
                     onItemSelected: (index) {
                       setState(() => _selectedIndex = index);
-                      // TODO: add tab routing logic here if needed
+                      if (index == 3) {
+                        // Navigate to Account
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AccountScreen(),
+                          ),
+                        );
+                      } else if (index == 2) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ActivitiesScreen(),
+                          ),
+                        );
+                      } else if (index == 1) {
+                        // Navigate to Support
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const Support()),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const HomeScreen()),
+                        );
+                      }
                     },
                   ),
                 ],

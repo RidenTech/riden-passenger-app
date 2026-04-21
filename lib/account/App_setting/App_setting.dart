@@ -1,6 +1,11 @@
 import 'package:Riden/account/App_setting/change_password.dart';
+import 'package:Riden/widgets/riden_map_view.dart';
+import 'package:Riden/auth/sign_in_screen.dart';
+import 'package:Riden/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
+import 'package:Riden/home/notification_screen.dart';
 
 class AppSettingsScreen extends StatelessWidget {
   const AppSettingsScreen({super.key});
@@ -12,16 +17,22 @@ class AppSettingsScreen extends StatelessWidget {
       body: Stack(
         children: [
           // Map Background (Reusable component)
-          Positioned.fill(
-            child: Image.asset(
-              "assets/images/map.png",
-              fit: BoxFit.cover,
-              opacity: const AlwaysStoppedAnimation(0.4),
-            ),
-          ),
+          Positioned.fill(child: RidenMapView(mapHeight: double.infinity)),
           SafeArea(
             child: Column(
               children: [
+                 const SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    'RIDEN',
+                    style: GoogleFonts.audiowide(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey.shade600.withOpacity(0.82),
+                      height: 1.0,
+                    ),
+                  ),
+                ),
                 _buildHeader(context),
                 const Spacer(),
                 _buildSettingsBottomSheet(context),
@@ -70,7 +81,12 @@ class AppSettingsScreen extends StatelessWidget {
                 }),
                 _settingsTile(Icons.share_outlined, "Share The App", () {}),
                 _settingsTile(Icons.star_outline, "Rate The App", () {}),
-                _settingsTile(Icons.logout, "Logout", () {}, isLast: true),
+                _settingsTile(
+                  Icons.logout,
+                  "Logout",
+                  () => _showLogoutDialog(context),
+                  isLast: true,
+                ),
               ],
             ),
           ),
@@ -102,6 +118,122 @@ class AppSettingsScreen extends StatelessWidget {
     );
   }
 
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1A1A2E),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon
+                Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.logout_rounded,
+                    color: Colors.red,
+                    size: 36,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Title
+                Text(
+                  'Leaving Already?',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Subtitle
+                Text(
+                  'You\'ll need to log in again to access your account',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                // Logout Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    onPressed: () async {
+                      Navigator.pop(dialogContext);
+                      // Get AuthController and logout
+                      final authController = Get.find<AuthController>();
+                      await authController.logout();
+                      // Navigate to SignInScreen and clear all previous routes
+                      Get.offAll(() => const SignInScreen());
+                    },
+                    child: Text(
+                      'Log Out',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Stay Logged In Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        color: Colors.blue.withOpacity(0.5),
+                        width: 2,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(dialogContext),
+                    child: Text(
+                      'Stay Logged In',
+                      style: GoogleFonts.poppins(
+                        color: Colors.blue[300],
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildHeader(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -115,14 +247,42 @@ class AppSettingsScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
             ),
           ),
-          Text(
-            'RIDEN',
-            style: GoogleFonts.audiowide(
-              fontSize: 22,
-              color: Colors.grey.withOpacity(0.8),
-            ),
-          ),
-          const Icon(Icons.notifications_none, color: Colors.white),
+                
+                               GestureDetector(
+                                 onTap: () => Get.to(() => const NotificationScreen()),
+                                 child: Stack(
+                                   children: [
+                                     Container(
+                                       padding: const EdgeInsets.all(7),
+                                       decoration: BoxDecoration(
+                                         color: Colors.grey.withOpacity(0.25),
+                                         shape: BoxShape.circle,
+                                         border: Border.all(
+                                           color: Colors.white24,
+                                           width: 1,
+                                         ),
+                                       ),
+                                       child: const Icon(
+                                         Icons.notifications_none_outlined,
+                                         color: Colors.white,
+                                         size: 20,
+                                       ),
+                                     ),
+                                     Positioned(
+                                       right: 2,
+                                       top: 2,
+                                       child: Container(
+                                         width: 8,
+                                         height: 8,
+                                         decoration: const BoxDecoration(
+                                           color: Colors.red,
+                                           shape: BoxShape.circle,
+                                         ),
+                                       ),
+                                     ),
+                                   ],
+                                 ),
+                               ),
         ],
       ),
     );

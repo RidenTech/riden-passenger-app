@@ -4,7 +4,7 @@ import '../widgets/conic_border_painter.dart';
 
 class CarSelectionView extends StatefulWidget {
   final double sheetPosition;
-  final Function(String) onCarSelected;
+  final Function(CarOption) onCarSelected;
 
   const CarSelectionView({
     super.key,
@@ -110,48 +110,48 @@ class _CarSelectionViewState extends State<CarSelectionView> {
         border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
       ),
       child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(icon, color: Colors.white, size: 18),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      "$optionsCount Options",
-                      style: GoogleFonts.poppins(
-                        color: Colors.white70,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, color: Colors.white, size: 18),
                 ),
-              ),
-              const Divider(color: Colors.white10, height: 1),
-              ...cars.map((car) => _buildCarItem(car)).toList(),
-              const SizedBox(height: 10),
-            ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  "$optionsCount Options",
+                  style: GoogleFonts.poppins(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
           ),
+          const Divider(color: Colors.white10, height: 1),
+          ...cars.map((car) => _buildCarItem(car)),
+          const SizedBox(height: 10),
+        ],
+      ),
     );
   }
 
@@ -163,7 +163,7 @@ class _CarSelectionViewState extends State<CarSelectionView> {
         setState(() {
           _selectedCarName = car.name;
         });
-        widget.onCarSelected(car.name);
+        widget.onCarSelected(car);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
@@ -181,9 +181,9 @@ class _CarSelectionViewState extends State<CarSelectionView> {
               height: 45,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) => Icon(
-                Icons.car_repair, 
-                color: isSelected ? Colors.black54 : Colors.white54, 
-                size: 40
+                Icons.car_repair,
+                color: isSelected ? Colors.black54 : Colors.white54,
+                size: 40,
               ),
             ),
             const SizedBox(width: 15),
@@ -203,12 +203,16 @@ class _CarSelectionViewState extends State<CarSelectionView> {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.access_time, color: isSelected ? Colors.black54 : Colors.white54 , size: 12),
+                      Icon(
+                        Icons.access_time,
+                        color: isSelected ? Colors.black54 : Colors.white54,
+                        size: 12,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         car.time,
                         style: GoogleFonts.poppins(
-                          color: isSelected ? Colors.black54 : Colors.white54 ,
+                          color: isSelected ? Colors.black54 : Colors.white54,
                           fontSize: 11,
                         ),
                       ),
@@ -232,7 +236,7 @@ class _CarSelectionViewState extends State<CarSelectionView> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.poppins(
-                color: isSelected ? Colors.black : Colors.white ,
+                color: isSelected ? Colors.black : Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),

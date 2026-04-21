@@ -25,9 +25,9 @@ class RidenBottomNav extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Expanded(child: _buildNavItem("Booking", Icons.bookmark_outline, 0)),
+          Expanded(child: _buildNavItem("Booking", Icons.receipt_long,  0)),
           Expanded(child: _buildNavItem("Support", Icons.headset_mic_outlined, 1)),
-          Expanded(child: _buildNavItem("Activity", Icons.show_chart_rounded, 2)),
+          Expanded(child: _buildNavItem("Activity", Icons.monitor_heart, 2)),
           Expanded(child: _buildNavItem("Account", Icons.person_outline_rounded, 3)),
         ],
       ),

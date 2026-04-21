@@ -1,7 +1,10 @@
 import 'package:Riden/account/App_setting/verification_code.dart';
 import 'package:Riden/widgets/custom_text_field.dart';
+import 'package:Riden/widgets/riden_map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/home/notification_screen.dart';
+import 'package:get/get.dart';
 
 class ChangePasswordPhoneScreen extends StatefulWidget {
   const ChangePasswordPhoneScreen({super.key});
@@ -32,15 +35,7 @@ class _ChangePasswordPhoneScreenState extends State<ChangePasswordPhoneScreen> {
       body: Stack(
         children: [
           // ── Background Map Layer ─────────────────────────────────────
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.4,
-              child: Image.asset(
-                "assets/images/map.png", // Ensure asset is in pubspec.yaml
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          Positioned.fill(child: RidenMapView(mapHeight: double.infinity)),
 
           // ── Header Content ──────────────────────────────────────────
           SafeArea(
@@ -83,37 +78,40 @@ class _ChangePasswordPhoneScreenState extends State<ChangePasswordPhoneScreen> {
                         ),
                       ),
                       // Notification bell with red dot
-                      Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.25),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white24,
-                                width: 1,
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.notifications_none_outlined,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                          Positioned(
-                            right: 2,
-                            top: 2,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
+                      GestureDetector(
+                        onTap: () => Get.to(() => const NotificationScreen()),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
                                 shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

@@ -1,17 +1,23 @@
 // ignore_for_file: deprecated_member_use, avoid_print
-import 'dart:async';
-import 'dart:math';
 
 import 'package:Riden/Booking/ride_request_view.dart';
-import 'package:Riden/controllers/auth_controller.dart';
-import 'package:Riden/support/support.dart' hide RidenBottomNav;
+import 'package:Riden/Activity/activities.dart';
 import 'package:Riden/widgets/background_image.dart';
 import 'package:Riden/widgets/riden_bottom_nav.dart';
+import 'package:Riden/account/account_screen.dart';
+import 'package:Riden/home/notification_screen.dart';
+import 'package:Riden/support/support.dart';
+import 'package:Riden/controllers/auth_controller.dart';
+import 'package:Riden/controllers/navigation_controller.dart';
+import 'package:Riden/services/location_search_service.dart';
+import 'package:Riden/services/map_cache_service.dart';
+import 'package:Riden/services/global_map_service.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:get/get.dart';
+import 'dart:async';
+import 'dart:math';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,161 +27,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedNavIndex = 0;
   bool _showRideSelection = false;
+  int _selectedNavIndex = 0; // 0=Home, 1=Support, 2=Activities, 3=Account
   final TextEditingController _searchController = TextEditingController();
   late AuthController _authController;
+  late NavigationController _navigationController;
 
-  GoogleMapController? _mapController;
+  late GoogleMapController _mapController;
   LatLng? _currentLocation;
-  StreamSubscription<Position>? _positionStream;
   final Set<Marker> _markers = {};
   bool _isLoadingLocation = true;
 
-  // Location suggestions with coordinates (lat, lng)
-  final List<Map<String, dynamic>> _allLocations = [
-    {
-      'name': 'McDonald\'s',
-      'address': '123 Main St, Downtown',
-      'category': 'restaurant',
-      'lat': 37.7849,
-      'lng': -122.4094,
-    },
-    {
-      'name': 'Burger King',
-      'address': '456 Commercial Ave, Downtown',
-      'category': 'restaurant',
-      'lat': 37.7949,
-      'lng': -122.3994,
-    },
-    {
-      'name': 'Pizza Hut',
-      'address': '789 Food St, Downtown',
-      'category': 'restaurant',
-      'lat': 37.7849,
-      'lng': -122.4094,
-    },
-    {
-      'name': 'KFC',
-      'address': '100 Main St, Midtown',
-      'category': 'restaurant',
-      'lat': 37.7749,
-      'lng': -122.3894,
-    },
-    {
-      'name': 'Starbucks Coffee',
-      'address': '200 Market St, Central',
-      'category': 'café',
-      'lat': 37.7649,
-      'lng': -122.4194,
-    },
-    {
-      'name': 'Costa Coffee',
-      'address': '300 Park Lane, Uptown',
-      'category': 'café',
-      'lat': 37.7549,
-      'lng': -122.4494,
-    },
-    {
-      'name': 'Dunkin Donuts',
-      'address': '150 Broadway, Downtown',
-      'category': 'café',
-      'lat': 37.7849,
-      'lng': -122.4294,
-    },
-    {
-      'name': 'Walmart Supermarket',
-      'address': '500 Commerce Blvd, Industrial',
-      'category': 'shopping',
-      'lat': 37.7249,
-      'lng': -122.3894,
-    },
-    {
-      'name': 'Target Store',
-      'address': '501 Retail Dr, Mall Area',
-      'category': 'shopping',
-      'lat': 37.7649,
-      'lng': -122.3794,
-    },
-    {
-      'name': 'Best Buy Electronics',
-      'address': '502 Tech Way, Downtown',
-      'category': 'electronics',
-      'lat': 37.7749,
-      'lng': -122.3994,
-    },
-    {
-      'name': 'Nike Store',
-      'address': '503 Fashion St, Downtown',
-      'category': 'shopping',
-      'lat': 37.7949,
-      'lng': -122.4094,
-    },
-    {
-      'name': 'Gold\'s Gym',
-      'address': '400 Athletic Rd, Sports District',
-      'category': 'fitness',
-      'lat': 37.7649,
-      'lng': -122.4194,
-    },
-    {
-      'name': 'Planet Fitness',
-      'address': '401 Health Blvd, Fitness Zone',
-      'category': 'fitness',
-      'lat': 37.7549,
-      'lng': -122.3994,
-    },
-    {
-      'name': 'Central Hospital',
-      'address': '150 Medical Park, Healthcare Zone',
-      'category': 'hospital',
-      'lat': 37.7649,
-      'lng': -122.4394,
-    },
-    {
-      'name': 'City General Hospital',
-      'address': '151 Health Ave, Medical District',
-      'category': 'hospital',
-      'lat': 37.7949,
-      'lng': -122.4094,
-    },
-    {
-      'name': 'Cinema Palace',
-      'address': '420 Entertainment Ave, Arts District',
-      'category': 'entertainment',
-      'lat': 37.7849,
-      'lng': -122.4294,
-    },
-    {
-      'name': 'Movie Theater',
-      'address': '421 Film Lane, Downtown',
-      'category': 'entertainment',
-      'lat': 37.7749,
-      'lng': -122.3994,
-    },
-    {
-      'name': 'Central Park',
-      'address': '789 Park Road, Nature',
-      'category': 'park',
-      'lat': 37.7749,
-      'lng': -122.4194,
-    },
-    {
-      'name': 'Beach Waterfront',
-      'address': '300 Coastal Rd, Beach Area',
-      'category': 'park',
-      'lat': 37.7549,
-      'lng': -122.4494,
-    },
-    {
-      'name': 'Train Station',
-      'address': '200 Station Rd, Transport Hub',
-      'category': 'transport',
-      'lat': 37.7949,
-      'lng': -122.3894,
-    },
-  ];
-  List<Map<String, dynamic>> _filteredLocations = [];
+  // Google Places API Variables
+  List<LocationSuggestion> _filteredLocations = [];
+  Timer? _searchDebounceTimer;
+  String? _sessionToken;
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -186,79 +53,103 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       _authController = Get.put(AuthController());
     }
-    print(
-      '✅ AuthController initialized: ${_authController.userFullName.value}',
-    );
+    // Initialize NavigationController
+    _navigationController = Get.find<NavigationController>();
+    _selectedNavIndex = _navigationController.selectedNavIndex.value;
+
+    // Ensure AuthController is fully initialized before loading data
+    _initializeAndLoadData();
 
     _initializeLocation();
-    _startLocationTracking();
-    _searchController.addListener(_filterLocations);
+    _searchController.addListener(_onSearchChanged);
   }
 
-  Future<void> _initializeLocation() async {
-    try {
-      final permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        await Geolocator.requestPermission();
-      }
+  /// Wait for AuthController initialization and load user data
+  Future<void> _initializeAndLoadData() async {
+    print('\n🏠 HomeScreen: Starting initialization...');
 
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best,
+    // Ensure AuthController is fully initialized
+    await _authController.ensureInitialized();
+
+    // Force reload the data from SharedPreferences
+    await _authController.forceReloadUserData();
+
+    if (mounted) {
+      setState(() {});
+      print(
+        '✅ HomeScreen - User data loaded: ${_authController.userFullName.value} (${_authController.userEmail.value})',
       );
-
-      setState(() {
-        _currentLocation = LatLng(position.latitude, position.longitude);
-        _isLoadingLocation = false;
-        _addUserMarker();
-      });
-
-      if (mounted && _mapController != null) {
-        _mapController!.animateCamera(
-          CameraUpdate.newLatLng(_currentLocation!),
-        );
-      }
-    } catch (e) {
-      print('Error getting location: $e');
-      setState(() {
-        _isLoadingLocation = false;
-      });
     }
   }
 
-  void _startLocationTracking() {
-    const LocationSettings locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.best,
-      distanceFilter: 10, // Update when moved 10 meters
-    );
+  /// Initialize location from cache service (prevents redundant API calls)
+  Future<void> _initializeLocation() async {
+    try {
+      final mapCache = MapCacheService();
+      final globalMapService = Get.find<GlobalMapService>();
 
-    _positionStream =
-        Geolocator.getPositionStream(
-          locationSettings: locationSettings,
-        ).listen((Position position) {
-          if (mounted) {
-            setState(() {
-              _currentLocation = LatLng(position.latitude, position.longitude);
-              _addUserMarker();
-            });
+      // Initialize cache if not already done
+      if (!mapCache.isLocationInitialized) {
+        print('🗺️ Initializing map cache for home screen');
+        await mapCache.initializeMapCache();
+      }
 
-            if (_mapController != null) {
-              _mapController!.animateCamera(
-                CameraUpdate.newLatLng(_currentLocation!),
-              );
-            }
-          }
+      _currentLocation = mapCache.cachedLocation;
+      _markers.addAll(mapCache.cachedMarkers);
+
+      // Update Global Map Service
+      if (_currentLocation != null) {
+        globalMapService.updateLocation(_currentLocation!);
+      }
+      for (var marker in _markers) {
+        globalMapService.addMarker(marker);
+      }
+
+      // Set dark map style for all screens
+      if (mapCache.cachedMapStyle != null) {
+        globalMapService.setMapStyle(mapCache.cachedMapStyle!);
+      }
+
+      if (mounted) {
+        setState(() {
+          _isLoadingLocation = false;
         });
+
+        // Animate camera after a small delay to ensure map is ready
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (mounted && _currentLocation != null) {
+          _mapController.animateCamera(
+            CameraUpdate.newLatLng(_currentLocation!),
+          );
+        }
+      }
+    } catch (e) {
+      print('❌ Error initializing location: $e');
+      if (mounted) {
+        setState(() {
+          _isLoadingLocation = false;
+        });
+      }
+    }
   }
 
-  Future<BitmapDescriptor> _createPointerMarker() async {
-    // Avoid app crash from invalid/non-bitmap marker assets on some devices.
-    return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
+  Future<BitmapDescriptor> createPointerMarker() async {
+    try {
+      return await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(size: Size(64, 64)),
+        'assets/images/pointer.png',
+      );
+    } catch (e) {
+      print('❌ Error loading custom pointer: $e');
+      // Fallback to default marker
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
+    }
   }
 
-  Future<void> _addUserMarker() async {
+  Future<void> addUserMarker() async {
     if (_currentLocation == null) return;
 
-    final markerIcon = await _createPointerMarker();
+    final markerIcon = await createPointerMarker();
 
     _markers.clear();
     _markers.add(
@@ -271,26 +162,34 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> _loadMapStyle() async {
+  Future<void> loadMapStyle() async {
     try {
-      final String style = await DefaultAssetBundle.of(
-        context,
-      ).loadString('assets/map_style_dark.json');
-      if (_mapController != null) {
-        await _mapController!.setMapStyle(style);
+      final globalMapService = Get.find<GlobalMapService>();
+      // Use the dark map style from GlobalMapService (same for all screens)
+      final String style = globalMapService.mapStyle.value;
+      if (mounted) {
+        await _mapController.setMapStyle(style);
+        print('✅ Dark theme applied to home screen map from GlobalMapService');
       }
     } catch (e) {
-      print('Error loading map style: $e');
+      print('❌ Error loading map style: $e');
+      // Fallback: Try loading from JSON file
+      try {
+        final String style = await DefaultAssetBundle.of(
+          context,
+        ).loadString('assets/map_style_dark.json');
+        if (mounted) {
+          await _mapController.setMapStyle(style);
+          print('✅ Dark theme applied from JSON file');
+        }
+      } catch (fileError) {
+        print('❌ Error loading JSON file: $fileError');
+      }
     }
   }
 
   // Calculate distance between two coordinates (in km)
-  double _calculateDistance(
-    double lat1,
-    double lng1,
-    double lat2,
-    double lng2,
-  ) {
+  double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
     const double R = 6371; // Earth radius in km
     final double dLat = ((lat2 - lat1) * pi) / 180;
     final double dLng = ((lng2 - lng1) * pi) / 180;
@@ -304,144 +203,165 @@ class _HomeScreenState extends State<HomeScreen> {
     return R * c;
   }
 
-  void _filterLocations() {
-    final query = _searchController.text.toLowerCase().trim();
+  // Handle search input with debouncing
+  void _onSearchChanged() {
+    _searchDebounceTimer?.cancel();
 
-    setState(() {
-      if (query.isEmpty) {
+    final query = _searchController.text.trim();
+
+    if (query.isEmpty) {
+      setState(() {
         _filteredLocations = [];
-      } else {
-        List<Map<String, dynamic>> results = [];
-
-        // Smart Google Maps-like search
-        // 1. Exact name matches (highest priority)
-        var exactMatches = _allLocations
-            .where((location) => location['name']!.toLowerCase() == query)
-            .toList();
-        results.addAll(exactMatches);
-
-        // 2. Name starts with query
-        var nameStarts = _allLocations
-            .where(
-              (location) =>
-                  location['name']!.toLowerCase().startsWith(query) &&
-                  !exactMatches.contains(location),
-            )
-            .toList();
-        results.addAll(nameStarts);
-
-        // 3. Name contains query
-        var nameContains = _allLocations
-            .where(
-              (location) =>
-                  location['name']!.toLowerCase().contains(query) &&
-                  !exactMatches.contains(location) &&
-                  !nameStarts.contains(location),
-            )
-            .toList();
-        results.addAll(nameContains);
-
-        // 4. Address contains query
-        var addressMatches = _allLocations
-            .where(
-              (location) =>
-                  location['address']!.toLowerCase().contains(query) &&
-                  !results.contains(location),
-            )
-            .toList();
-        results.addAll(addressMatches);
-
-        // Sort all results by proximity to current location
-        if (_currentLocation != null) {
-          results.sort((a, b) {
-            double distA = _calculateDistance(
-              _currentLocation!.latitude,
-              _currentLocation!.longitude,
-              a['lat'] as double,
-              a['lng'] as double,
-            );
-            double distB = _calculateDistance(
-              _currentLocation!.latitude,
-              _currentLocation!.longitude,
-              b['lat'] as double,
-              b['lng'] as double,
-            );
-            return distA.compareTo(distB);
-          });
-          print(
-            '📍 Sorted by proximity - Top result is ${(results.isNotEmpty ? results.first['name'] : 'None')}',
-          );
-        }
-
-        // Limit total results to 10 suggestions
-        _filteredLocations = results.length > 10
-            ? results.sublist(0, 10)
-            : results;
-
-        print(
-          '🔍 Search Query: "$query" - Found ${_filteredLocations.length} results near user',
-        );
-      }
-    });
-  }
-
-  void _selectLocation(String locationName, String locationAddress) {
-    print('📍 Location Selected: $locationName - $locationAddress');
-    _searchController.text = locationName;
-
-    // Find the location to get coordinates
-    var selectedLocation = _allLocations.firstWhere(
-      (loc) => loc['name'] == locationName,
-      orElse: () => {},
-    );
-
-    if (selectedLocation.isNotEmpty) {
-      _addSelectedLocationMarker(
-        locationName,
-        locationAddress,
-        selectedLocation['lat'] as double,
-        selectedLocation['lng'] as double,
-      );
+      });
+      return;
     }
 
-    setState(() {
-      _filteredLocations = [];
+    // Debounce: wait 500ms before making API call
+    _searchDebounceTimer = Timer(const Duration(milliseconds: 500), () {
+      _searchLocations(query);
     });
   }
 
-  void _addSelectedLocationMarker(
+  /// Search locations using Google Places API
+  Future<void> _searchLocations(String query) async {
+    if (!mounted) return;
+
+    setState(() {
+      _isSearching = true;
+    });
+
+    try {
+      // Generate session token if not exists (reduces costs)
+      _sessionToken ??= LocationSearchService.generateSessionToken();
+
+      // Search for locations using Google Places API
+      final suggestions = await LocationSearchService.searchPlaces(
+        query: query,
+        sessionToken: _sessionToken,
+        latitude: _currentLocation?.latitude,
+        longitude: _currentLocation?.longitude,
+        radiusMeters: 50000, // 50km radius
+      );
+
+      if (mounted) {
+        setState(() {
+          _filteredLocations = suggestions;
+          _isSearching = false;
+        });
+
+        print('✅ API Search Complete: Found ${suggestions.length} suggestions');
+      }
+    } catch (e) {
+      print('❌ Error searching locations: $e');
+      if (mounted) {
+        setState(() {
+          _isSearching = false;
+        });
+      }
+    }
+  }
+
+  /// Select a location from suggestions and fetch detailed information
+  Future<void> selectLocation(LocationSuggestion suggestion) async {
+    print('📍 Location Selected: ${suggestion.mainText}');
+
+    setState(() {
+      _isSearching = true;
+    });
+
+    try {
+      // Fetch detailed information about the selected place
+      final placeDetails = await LocationSearchService.getPlaceDetails(
+        placeId: suggestion.placeId,
+        sessionToken: _sessionToken,
+      );
+
+      if (placeDetails != null && mounted) {
+        // Extract coordinates
+        final coords = LocationSearchService.extractCoordinates(placeDetails);
+        final address = LocationSearchService.extractFormattedAddress(
+          placeDetails,
+        );
+
+        if (coords != null) {
+          print(
+            '📍 Got coordinates: ${coords['latitude']}, ${coords['longitude']}',
+          );
+
+          // Close suggestions and clear search bar
+          setState(() {
+            _filteredLocations = [];
+            _searchController.clear();
+          });
+
+          // Add marker for selected location with custom pointer
+          await addSelectedLocationMarker(
+            suggestion.mainText,
+            address ?? suggestion.secondaryText,
+            coords['latitude']!,
+            coords['longitude']!,
+          );
+        }
+      }
+    } catch (e) {
+      print('❌ Error selecting location: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSearching = false;
+        });
+      }
+    }
+  }
+
+  Future<void> addSelectedLocationMarker(
     String name,
     String address,
     double lat,
     double lng,
-  ) {
+  ) async {
     final selectedLatLng = LatLng(lat, lng);
+    final globalMapService = Get.find<GlobalMapService>();
 
-    // Add marker for selected location
-    _markers.add(
-      Marker(
+    try {
+      // Load custom pointer marker
+      final markerIcon = await createPointerMarker();
+
+      // Add marker for selected location with custom pointer
+      final marker = Marker(
         markerId: MarkerId('selected_location_$name'),
         position: selectedLatLng,
         infoWindow: InfoWindow(title: name, snippet: address),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-      ),
-    );
+        icon: markerIcon,
+      );
 
-    // Animate camera to selected location
-    if (mounted) {
-      if (_mapController != null) {
-        _mapController!.animateCamera(CameraUpdate.newLatLng(selectedLatLng));
+      _markers.add(marker);
+      globalMapService.addMarker(marker);
+
+      // Animate camera to selected location
+      if (mounted) {
+        _mapController.animateCamera(
+          CameraUpdate.newLatLngZoom(selectedLatLng, 16.0),
+        );
       }
-    }
 
-    setState(() {});
+      setState(() {});
+    } catch (e) {
+      print('❌ Error adding selected location marker: $e');
+    }
   }
 
   @override
   void dispose() {
     _searchController.dispose();
-    _positionStream?.cancel();
-    _mapController?.dispose();
+    _searchDebounceTimer?.cancel();
+    // Don't dispose _positionStream - it's managed by MapCacheService
+    _mapController.dispose();
     super.dispose();
   }
 
@@ -452,13 +372,66 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.black.withOpacity(0.5),
         body: Stack(
           children: [
-            // Main Home Content (Wrapped in SafeArea)
+            // Main Navigation Content using IndexedStack (Home, Support, Activities, Account)
             if (!_showRideSelection)
-              SafeArea(
-                bottom: false,
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
+              IndexedStack(
+                index: _selectedNavIndex,
+                children: [
+                  // Index 0: Home Screen Content
+                  _buildHomeContent(),
+                  // Index 1: Support Screen Content
+                  Support(onClose: () {}),
+                  // Index 2: Activities Screen Content
+                  ActivitiesScreen(),
+                  // Index 3: Account Screen Content
+                  AccountScreen(),
+                ],
+              ),
+
+            // Ride Selection View Overlay (Full-screen, non-SafeArea mapped)
+            if (_showRideSelection)
+              Positioned.fill(
+                child: RideRequestView(
+                  onBack: () {
+                    setState(() {
+                      _showRideSelection = false;
+                    });
+                  },
+                ),
+              ),
+
+            // Floating Custom Bottom Navigation Bar (Locked at bottom)
+            if (!_showRideSelection)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.05,
+                    vertical: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  child: RidenBottomNav(
+                    selectedIndex: _selectedNavIndex,
+                    onItemSelected: (index) {
+                      setState(() {
+                        _selectedNavIndex = index;
+                      });
+                      _navigationController.setSelectedIndex(index);
+                    },
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build Home Screen Content
+  Widget _buildHomeContent() {
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
                     children: [
                       const SizedBox(height: 10),
                       Center(
@@ -499,16 +472,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 ),
                                 Obx(() {
+                                  String firstName =
+                                      _authController.userFirstName.value;
+                                  String lastName =
+                                      _authController.userLastName.value;
                                   String displayName =
-                                      _authController
-                                          .userFullName
-                                          .value
-                                          .isNotEmpty
-                                      ? _authController.userFullName.value
+                                      '$firstName $lastName'.trim().isNotEmpty
+                                      ? '$firstName $lastName'.trim()
                                       : "User";
 
                                   print(
-                                    '🟢 Display Name: "$displayName" | Full: "${_authController.userFullName.value}" | FirstName: "${_authController.userFirstName.value}" | LastName: "${_authController.userLastName.value}"',
+                                    '🟢 Display Name: "$displayName" | FirstName: "$firstName" | LastName: "$lastName"',
                                   );
 
                                   return Text(
@@ -522,37 +496,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }),
                               ],
                             ),
-                            Stack(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(7),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.25),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.white24,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: const Icon(
-                                    Icons.notifications_none_outlined,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
-                                Positioned(
-                                  right: 2,
-                                  top: 2,
-                                  child: Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red,
+                            GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => const NotificationScreen()),
+                              ),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(7),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.25),
                                       shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colors.white24,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.notifications_none_outlined,
+                                      color: Colors.white,
+                                      size: 20,
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Positioned(
+                                    right: 2,
+                                    top: 2,
+                                    child: Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -600,7 +580,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontSize: 14,
                                       ),
                                       decoration: InputDecoration(
-                                        hintText: "Where are you going?",
+                                        hintText: "Where to?",
                                         hintStyle: GoogleFonts.poppins(
                                           color: Colors.white54,
                                           fontSize: 14,
@@ -656,14 +636,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         const NeverScrollableScrollPhysics(),
                                     itemCount: _filteredLocations.length,
                                     itemBuilder: (context, index) {
-                                      final location =
+                                      final suggestion =
                                           _filteredLocations[index];
 
                                       return GestureDetector(
-                                        onTap: () => _selectLocation(
-                                          location['name']!,
-                                          location['address']!,
-                                        ),
+                                        onTap: () => selectLocation(suggestion),
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 16,
@@ -696,7 +673,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      location['name']!,
+                                                      suggestion.mainText,
                                                       style:
                                                           GoogleFonts.poppins(
                                                             color: Colors.white,
@@ -706,7 +683,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           ),
                                                     ),
                                                     Text(
-                                                      location['address']!,
+                                                      suggestion.secondaryText,
                                                       style:
                                                           GoogleFonts.poppins(
                                                             color:
@@ -720,12 +697,66 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ],
                                                 ),
                                               ),
+                                              if (_isSearching &&
+                                                  index ==
+                                                      _filteredLocations
+                                                              .length -
+                                                          1)
+                                                const SizedBox(
+                                                  width: 16,
+                                                  height: 16,
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                          Color
+                                                        >(Colors.blue),
+                                                  ),
+                                                ),
                                             ],
                                           ),
                                         ),
                                       );
                                     },
                                   ),
+                                ),
+                              ),
+                            // Show loading indicator when searching
+                            if (_isSearching && _filteredLocations.isEmpty)
+                              Container(
+                                margin: const EdgeInsets.only(top: 8),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF1E1E1E),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.12),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.blue,
+                                            ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 12),
+                                    Text(
+                                      'Searching locations...',
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                           ],
@@ -767,7 +798,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                           physics: const BouncingScrollPhysics(),
                           children: [
-                            _buildDestinationCard(
+                            buildDestinationCard(
                               icon: Icons.work_outline,
                               title: "Office",
                               subtitle: "2972 Westheimer Rd.",
@@ -776,7 +807,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               dotColor: Colors.blue,
                             ),
                             const SizedBox(height: 8),
-                            _buildDestinationCard(
+                            buildDestinationCard(
                               icon: Icons.coffee_outlined,
                               title: "Coffee shop",
                               subtitle: "1901 Thorridge Cir.",
@@ -785,7 +816,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               dotColor: Colors.orange,
                             ),
                             const SizedBox(height: 8),
-                            _buildDestinationCard(
+                            buildDestinationCard(
                               icon: Icons.home_outlined,
                               title: "Home",
                               subtitle: "Home",
@@ -797,156 +828,133 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
-                      // Map section starts under cards and extends behind nav.
+                      // Map Section with Fixed Height
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.46,
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: _isLoadingLocation
-                                  ? Container(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      child: const Center(
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white,
+                        height: 300,
+                        child: Container(
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            color: Colors.transparent,
+                          ),
+                          margin: const EdgeInsets.only(bottom: 0),
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(30),
+                            ),
+                            child: Stack(
+                              children: [
+                                // Google Map
+                                _isLoadingLocation
+                                    ? Container(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        child: const Center(
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  : _currentLocation == null
-                                  ? Container(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      child: const Center(
-                                        child: Text(
-                                          'Unable to get location',
-                                          style: TextStyle(color: Colors.white),
+                                      )
+                                    : _currentLocation == null
+                                    ? Container(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        child: const Center(
+                                          child: Text(
+                                            'Unable to get location',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                         ),
+                                      )
+                                    : GoogleMap(
+                                        onMapCreated: (controller) async {
+                                          _mapController = controller;
+                                          print('✅ Map controller initialized');
+
+                                          // Update Global Map Service
+                                          final globalMapService =
+                                              Get.find<GlobalMapService>();
+                                          globalMapService.setMapController(
+                                            controller,
+                                          );
+                                          globalMapService.updateLocation(
+                                            _currentLocation ??
+                                                const LatLng(
+                                                  37.7749,
+                                                  -122.4194,
+                                                ),
+                                          );
+
+                                          // Apply style after a brief delay to ensure map is ready
+                                          await Future.delayed(
+                                            const Duration(milliseconds: 500),
+                                          );
+                                          await loadMapStyle();
+                                          if (_currentLocation != null &&
+                                              mounted) {
+                                            _mapController.animateCamera(
+                                              CameraUpdate.newLatLng(
+                                                _currentLocation!,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        initialCameraPosition: CameraPosition(
+                                          target:
+                                              _currentLocation ??
+                                              const LatLng(37.7749, -122.4194),
+                                          zoom: 15,
+                                        ),
+                                        markers: _markers,
+                                        myLocationEnabled: false,
+                                        myLocationButtonEnabled: false,
+                                        compassEnabled: true,
+                                        mapToolbarEnabled: false,
+                                        zoomControlsEnabled: false,
                                       ),
-                                    )
-                                  : GoogleMap(
-                                      onMapCreated: (controller) async {
-                                        _mapController = controller;
-                                        await _loadMapStyle();
-                                        _mapController!.animateCamera(
+
+                                // Location Icon - Repositioned for Nav Overlap
+                                Positioned(
+                                  bottom: 100,
+                                  right: 20,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (_currentLocation != null) {
+                                        _mapController.animateCamera(
                                           CameraUpdate.newLatLng(
                                             _currentLocation!,
                                           ),
                                         );
-                                      },
-                                      initialCameraPosition: CameraPosition(
-                                        target:
-                                            _currentLocation ??
-                                            const LatLng(37.7749, -122.4194),
-                                        zoom: 15,
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.8),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: Colors.white10,
+                                        ),
                                       ),
-                                      markers: _markers,
-                                      myLocationEnabled: false,
-                                      myLocationButtonEnabled: false,
-                                      compassEnabled: true,
-                                      mapToolbarEnabled: false,
-                                      zoomControlsEnabled: false,
-                                    ),
-                            ),
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              top: 0,
-                              child: IgnorePointer(
-                                child: Container(
-                                  height: 150,
-                                  decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Color(0xFF060B16),
-                                        Color(0xB3060B16),
-                                        Color(0x00060B16),
-                                      ],
-                                      stops: [0.0, 0.45, 1.0],
+                                      child: const Icon(
+                                        Icons.my_location_rounded,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                            Positioned(
-                              bottom: 115,
-                              right: 20,
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (_currentLocation != null) {
-                                    _mapController?.animateCamera(
-                                      CameraUpdate.newLatLng(_currentLocation!),
-                                    );
-                                  }
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.8),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(color: Colors.white10),
-                                  ),
-                                  child: const Icon(
-                                    Icons.my_location_rounded,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-
-            // Floating Custom Bottom Navigation Bar
-            if (!_showRideSelection)
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.05,
-                    vertical: MediaQuery.of(context).size.height * 0.02,
-                  ),
-                  child: RidenBottomNav(
-                    selectedIndex: _selectedNavIndex,
-                    onItemSelected: (index) {
-                      if (index == 1) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const Support()),
-                        );
-                      } else {
-                        setState(() {
-                          _selectedNavIndex = index;
-                        });
-                      }
-                    },
-                  ),
-                ),
-              ),
-
-            // Ride Selection View Overlay (Full-screen, non-SafeArea mapped)
-            if (_showRideSelection)
-              Positioned.fill(
-                child: RideRequestView(
-                  onBack: () {
-                    setState(() {
-                      _showRideSelection = false;
-                    });
-                  },
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
+              );
   }
 
-  Widget _buildDestinationCard({
+  Widget buildDestinationCard({
     required IconData icon,
     required String title,
     required String subtitle,

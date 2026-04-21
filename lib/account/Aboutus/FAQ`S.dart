@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/widgets/riden_map_view.dart';
+import 'package:Riden/home/notification_screen.dart';
+import 'package:get/get.dart';
 
 class FaqsScreen extends StatefulWidget {
   const FaqsScreen({super.key});
@@ -45,16 +48,7 @@ class _FaqsScreenState extends State<FaqsScreen> {
       body: Stack(
         children: [
           // ── Map Background ───────────────────────────────────────────
-          Positioned.fill(
-            child: Container(
-              color: Colors.black,
-              child: Image.asset(
-                "assets/images/map.png",
-                fit: BoxFit.cover,
-                opacity: const AlwaysStoppedAnimation(0.6),
-              ),
-            ),
-          ),
+          Positioned.fill(child: RidenMapView(mapHeight: double.infinity)),
 
           // ── Top Bar ──────────────────────────────────────────────────
           SafeArea(
@@ -95,35 +89,40 @@ class _FaqsScreenState extends State<FaqsScreen> {
                         ),
                       ),
                       // Notification bell
-                      Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.25),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  color: Colors.white24, width: 1),
-                            ),
-                            child: const Icon(
-                              Icons.notifications_none_outlined,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                          Positioned(
-                            right: 2,
-                            top: 2,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
+                      GestureDetector(
+                        onTap: () => Get.to(() => const NotificationScreen()),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
                                 shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -138,8 +137,7 @@ class _FaqsScreenState extends State<FaqsScreen> {
             child: Container(
               width: double.infinity,
               height: MediaQuery.of(context).size.height * 0.62,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               decoration: const BoxDecoration(
                 color: Color(0xFF0D0D0D),
                 borderRadius: BorderRadius.only(
@@ -176,15 +174,13 @@ class _FaqsScreenState extends State<FaqsScreen> {
                   Expanded(
                     child: ListView.separated(
                       itemCount: _faqs.length,
-                      separatorBuilder: (_, _) =>
-                          const SizedBox(height: 10),
+                      separatorBuilder: (_, _) => const SizedBox(height: 10),
                       itemBuilder: (context, index) {
                         final isExpanded = _expandedIndex == index;
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              _expandedIndex =
-                                  isExpanded ? null : index;
+                              _expandedIndex = isExpanded ? null : index;
                             });
                           },
                           child: AnimatedContainer(
@@ -203,10 +199,11 @@ class _FaqsScreenState extends State<FaqsScreen> {
                               ),
                             ),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 14),
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // Question Row
                                 Row(
@@ -224,7 +221,8 @@ class _FaqsScreenState extends State<FaqsScreen> {
                                     AnimatedRotation(
                                       turns: isExpanded ? 0.5 : 0,
                                       duration: const Duration(
-                                          milliseconds: 300),
+                                        milliseconds: 300,
+                                      ),
                                       child: const Icon(
                                         Icons.keyboard_arrow_down,
                                         color: Colors.white54,
@@ -237,10 +235,7 @@ class _FaqsScreenState extends State<FaqsScreen> {
                                 // Answer (shown when expanded)
                                 if (isExpanded) ...[
                                   const SizedBox(height: 12),
-                                  Container(
-                                    height: 1,
-                                    color: Colors.white12,
-                                  ),
+                                  Container(height: 1, color: Colors.white12),
                                   const SizedBox(height: 12),
                                   Text(
                                     _faqs[index]['answer']!,

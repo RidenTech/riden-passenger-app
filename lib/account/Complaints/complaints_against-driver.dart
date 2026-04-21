@@ -1,4 +1,5 @@
 import 'package:Riden/widgets/glass_field.dart';
+import 'package:Riden/widgets/riden_map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -29,17 +30,13 @@ class _ComplaintAgainstDriverScreenState
       body: Stack(
         children: [
           // 1. Map Backdrop (Top 30%)
-           Positioned(
+          Positioned(
             top: 0,
             left: 0,
             right: 0,
-            height: screenHeight * 0.18, // Extending slightly for better overlap
-            child: Image.asset(
-              'assets/images/map.png',
-              fit: BoxFit.cover,
-              color: Colors.black.withOpacity(0.6),
-              colorBlendMode: BlendMode.darken,
-            ),
+            height:
+                screenHeight * 0.18, // Extending slightly for better overlap
+            child: RidenMapView(mapHeight: screenHeight * 0.18),
           ),
 
           // 2. Custom Header (Logo, Back, Notifications)
@@ -47,16 +44,17 @@ class _ComplaintAgainstDriverScreenState
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
               child: Column(
-                children: [ // Logo
-                      Text(
-                        'RIDEN',
-                        style: GoogleFonts.audiowide(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey.shade600.withOpacity(0.82),
-                          height: 1.0,
-                        ),
-                      ),
+                children: [
+                  // Logo
+                  Text(
+                    'RIDEN',
+                    style: GoogleFonts.audiowide(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey.shade600.withOpacity(0.82),
+                      height: 1.0,
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -69,10 +67,14 @@ class _ComplaintAgainstDriverScreenState
                             color: Colors.white,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.arrow_back, color: Colors.black, size: 20),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.black,
+                            size: 20,
+                          ),
                         ),
                       ),
-                     
+
                       // Notification Bell
                       Stack(
                         children: [
@@ -81,10 +83,16 @@ class _ComplaintAgainstDriverScreenState
                             decoration: BoxDecoration(
                               color: Colors.grey.withOpacity(0.25),
                               shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white24, width: 1),
+                              border: Border.all(
+                                color: Colors.white24,
+                                width: 1,
+                              ),
                             ),
-                            child: const Icon(Icons.notifications_none_outlined,
-                                color: Colors.white, size: 22),
+                            child: const Icon(
+                              Icons.notifications_none_outlined,
+                              color: Colors.white,
+                              size: 22,
+                            ),
                           ),
                           Positioned(
                             right: 2,
@@ -150,14 +158,21 @@ class _ComplaintAgainstDriverScreenState
                             Text(
                               "I am writing to formally lodge a complaint regarding a recent ride I took through your platform. The experience was disappointing and did not meet the standards I expect from your service.The driver assigned to my trip arrived late without any prior communication or apology. During the ride, the driver displayed unprofessional behavior, including speaking rud... more",
                               style: GoogleFonts.poppins(
-                                  color: Colors.white, fontSize: 12, height: 1.5),
+                                color: Colors.white,
+                                fontSize: 12,
+                                height: 1.5,
+                              ),
                             ),
                             const SizedBox(height: 15),
                             Row(
                               children: [
-                                _buildImagePlaceholder("assets/images/car1.png"),
+                                _buildImagePlaceholder(
+                                  "assets/images/car1.png",
+                                ),
                                 const SizedBox(width: 10),
-                                _buildImagePlaceholder("assets/images/white_mercedes.png"),
+                                _buildImagePlaceholder(
+                                  "assets/images/white_mercedes.png",
+                                ),
                               ],
                             ),
                           ],
@@ -169,7 +184,10 @@ class _ComplaintAgainstDriverScreenState
                         child: Text(
                           "Thank you for contacting us. We’re sorry to hear about your experience. To help us investigate this matter further, could you please provide additional details such as the date and time of the ride, driver’s name, and any specific incidents you would like to review? We appreciate your cooperation and look forward to resolving this issue.",
                           style: GoogleFonts.poppins(
-                              color: Colors.white, fontSize: 12, height: 1.5),
+                            color: Colors.white,
+                            fontSize: 12,
+                            height: 1.5,
+                          ),
                         ),
                       ),
                     ],
@@ -204,11 +222,16 @@ class _ComplaintAgainstDriverScreenState
                   Expanded(
                     child: TextField(
                       controller: _messageController,
-                      style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
                       decoration: InputDecoration(
                         hintText: "Type your message",
                         hintStyle: GoogleFonts.poppins(
-                            color: Colors.white54, fontSize: 14),
+                          color: Colors.white54,
+                          fontSize: 14,
+                        ),
                         border: InputBorder.none,
                       ),
                     ),
@@ -228,7 +251,9 @@ class _ComplaintAgainstDriverScreenState
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Align(
-        alignment: label == "You" ? Alignment.centerRight : Alignment.centerLeft,
+        alignment: label == "You"
+            ? Alignment.centerRight
+            : Alignment.centerLeft,
         child: Text(
           label,
           style: GoogleFonts.poppins(
@@ -255,10 +280,7 @@ class _ComplaintAgainstDriverScreenState
       height: 80,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
-        ),
+        image: DecorationImage(image: AssetImage(imagePath), fit: BoxFit.cover),
       ),
     );
   }

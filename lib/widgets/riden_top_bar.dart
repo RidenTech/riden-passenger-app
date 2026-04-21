@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/home/notification_screen.dart';
 
 class RidenBranding extends StatelessWidget {
   const RidenBranding({super.key});
@@ -22,7 +23,8 @@ class RidenBranding extends StatelessWidget {
 
 class RidenTopBar extends StatelessWidget {
   final VoidCallback onBack;
-  const RidenTopBar({super.key, required this.onBack});
+  final VoidCallback? onNotificationTap;
+  const RidenTopBar({super.key, required this.onBack, this.onNotificationTap});
 
   @override
   Widget build(BuildContext context) {
@@ -40,30 +42,38 @@ class RidenTopBar extends StatelessWidget {
             child: const Icon(Icons.arrow_back, color: Colors.black, size: 20),
           ),
         ),
-        Stack(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(7),
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.25),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white24, width: 1),
-              ),
-              child: const Icon(Icons.notifications_none_outlined, color: Colors.white, size: 20),
-            ),
-            Positioned(
-              right: 2,
-              top: 2,
-              child: Container(
-                width: 8,
-                height: 8,
-                decoration: const BoxDecoration(
-                  color: Colors.red,
+        GestureDetector(
+          onTap: onNotificationTap ?? () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const NotificationScreen()),
+            );
+          },
+          child: Stack(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.25),
                   shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white24, width: 1),
+                ),
+                child: const Icon(Icons.notifications_none_outlined, color: Colors.white, size: 20),
+              ),
+              Positioned(
+                right: 2,
+                top: 2,
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );

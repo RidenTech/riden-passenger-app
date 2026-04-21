@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/widgets/shared_map_widget.dart';
+import 'package:Riden/home/notification_screen.dart';
 
 import '../chat/call_screen.dart';
 import '../chat/chat_screen.dart';
@@ -43,13 +45,9 @@ class _DriverSearchViewState extends State<DriverSearchView> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Map Background
+          // Map Background (Shared Global Map)
           Positioned.fill(
-            child: Image.asset(
-              "assets/images/map.png",
-              fit: BoxFit.cover,
-              opacity: const AlwaysStoppedAnimation(0.6),
-            ),
+            child: SharedMapWidget(height: MediaQuery.of(context).size.height),
           ),
 
           // Searching Overlay (Only visible when not found)
@@ -104,20 +102,26 @@ class _DriverSearchViewState extends State<DriverSearchView> {
                       ),
                       Stack(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.25),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white24,
-                                width: 1,
-                              ),
+                          GestureDetector(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const NotificationScreen()),
                             ),
-                            child: const Icon(
-                              Icons.notifications_none_outlined,
-                              color: Colors.white,
-                              size: 20,
+                            child: Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
+                              ),
                             ),
                           ),
                           Positioned(

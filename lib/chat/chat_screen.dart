@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/widgets/shared_map_widget.dart';
+import 'package:Riden/home/notification_screen.dart';
 import 'call_screen.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -12,9 +14,10 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final DraggableScrollableController _sheetController = DraggableScrollableController();
+  final DraggableScrollableController _sheetController =
+      DraggableScrollableController();
   final FocusNode _messageFocusNode = FocusNode();
-  
+
   final List<Map<String, dynamic>> _messages = [
     {"text": "Hi There excited for the ride", "isMe": true},
     {"text": "Welcome to a wonderful experience", "isMe": false},
@@ -27,7 +30,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _messageFocusNode.addListener(() {
       if (_messageFocusNode.hasFocus) {
         _sheetController.animateTo(
-          0.7 ,
+          0.7,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
@@ -38,13 +41,10 @@ class _ChatScreenState extends State<ChatScreen> {
   void _sendMessage() {
     if (_messageController.text.trim().isNotEmpty) {
       setState(() {
-        _messages.add({
-          "text": _messageController.text.trim(),
-          "isMe": true,
-        });
+        _messages.add({"text": _messageController.text.trim(), "isMe": true});
       });
       _messageController.clear();
-      
+
       // Auto-scroll to bottom
       Future.delayed(const Duration(milliseconds: 100), () {
         if (_scrollController.hasClients) {
@@ -74,17 +74,13 @@ class _ChatScreenState extends State<ChatScreen> {
       resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
-          // Map Background
+          // Map Background (Shared Global Map)
           Positioned.fill(
-            child: Image.asset(
-              "assets/images/map.png",
-              fit: BoxFit.cover,
-              opacity: const AlwaysStoppedAnimation(0.6),
-            ),
+            child: SharedMapWidget(height: MediaQuery.of(context).size.height),
           ),
           _buildMapOverlay(),
           // Top Action Buttons
-           SafeArea(
+          SafeArea(
             child: Column(
               children: [
                 const SizedBox(height: 10),
@@ -121,39 +117,54 @@ class _ChatScreenState extends State<ChatScreen> {
                                     color: Colors.white,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.arrow_back,
-                                      color: Colors.black, size: 20),
+                                  child: const Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.black,
+                                    size: 20,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ],
                       ),
-                      Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.25),
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white24, width: 1),
-                            ),
-                            child: const Icon(Icons.notifications_none_outlined,
-                                color: Colors.white, size: 20),
-                          ),
-                          Positioned(
-                            right: 2,
-                            top: 2,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const NotificationScreen()),
+                        ),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
                                 shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -171,12 +182,22 @@ class _ChatScreenState extends State<ChatScreen> {
               return Container(
                 decoration: const BoxDecoration(
                   color: Color(0xFF030408),
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
                 ),
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
-                    Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2))),
+                    Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.white24,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -184,23 +205,38 @@ class _ChatScreenState extends State<ChatScreen> {
                         children: [
                           const CircleAvatar(
                             radius: 24,
-                            backgroundImage: AssetImage("assets/images/profile.png"), 
+                            backgroundImage: AssetImage(
+                              "assets/images/profile.png",
+                            ),
                             backgroundColor: Colors.white24,
                           ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Text(
-                              "Sergio Fernandez", 
+                              "Sergio Fernandez",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                           GestureDetector(
                             onTap: () {
-                               Navigator.push(context, MaterialPageRoute(builder: (_) => const CallScreen()));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const CallScreen(),
+                                ),
+                              );
                             },
-                            child: const Icon(Icons.phone, color: Colors.blue, size: 24),
+                            child: const Icon(
+                              Icons.phone,
+                              color: Colors.blue,
+                              size: 24,
+                            ),
                           ),
                         ],
                       ),
@@ -209,13 +245,17 @@ class _ChatScreenState extends State<ChatScreen> {
                     const Divider(color: Colors.white12),
                     Expanded(
                       child: ListView.builder(
-                        controller: scrollController, // Use the sheet's controller for internal scrolling
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        controller:
+                            scrollController, // Use the sheet's controller for internal scrolling
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
                         itemCount: _messages.length,
                         itemBuilder: (context, index) {
                           return _buildMessageBubble(
-                            _messages[index]["text"], 
-                            isMe: _messages[index]["isMe"]
+                            _messages[index]["text"],
+                            isMe: _messages[index]["isMe"],
                           );
                         },
                       ),
@@ -236,37 +276,47 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Stack(
         children: [
           Positioned(
-             top: 250,
-             left: 100,
-             child: CustomPaint(
-                size: const Size(200, 100),
-                painter: RoutePainterChat(),
-             ),
+            top: 250,
+            left: 100,
+            child: CustomPaint(
+              size: const Size(200, 100),
+              painter: RoutePainterChat(),
+            ),
           ),
           Positioned(
             top: 240,
             left: 90,
             child: Transform.rotate(
               angle: -0.2, // rotate right
-              child: Image.asset("assets/images/car.png", width: 40, height: 20, fit: BoxFit.contain, color: Colors.white),
+              child: Image.asset(
+                "assets/images/car.png",
+                width: 40,
+                height: 20,
+                fit: BoxFit.contain,
+                color: Colors.white,
+              ),
             ),
           ),
           Positioned(
-             top: 200,
-             left: 60,
-             child: Container(
-               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-               decoration: BoxDecoration(
-                 color: Colors.white.withOpacity(0.9),
-                 borderRadius: BorderRadius.circular(8),
-               ),
-               child: Text(
-                 "5 min away", 
-                 maxLines: 1,
-                 overflow: TextOverflow.ellipsis,
-                 style: GoogleFonts.poppins(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.bold),
-               ),
-             ),
+            top: 200,
+            left: 60,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                "5 min away",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.poppins(
+                  color: Colors.blue,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
           Positioned(
             top: 330,
@@ -303,8 +353,12 @@ class _ChatScreenState extends State<ChatScreen> {
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
-            bottomLeft: isMe ? const Radius.circular(16) : const Radius.circular(4),
-            bottomRight: isMe ? const Radius.circular(4) : const Radius.circular(16),
+            bottomLeft: isMe
+                ? const Radius.circular(16)
+                : const Radius.circular(4),
+            bottomRight: isMe
+                ? const Radius.circular(4)
+                : const Radius.circular(16),
           ),
         ),
         child: Text(
@@ -317,7 +371,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildMessageInput(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 20, left: 20, right: 20, top: 10),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+        left: 20,
+        right: 20,
+        top: 10,
+      ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         decoration: BoxDecoration(
@@ -327,7 +386,11 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         child: Row(
           children: [
-            const Icon(Icons.emoji_emotions_outlined, color: Colors.blue, size: 20),
+            const Icon(
+              Icons.emoji_emotions_outlined,
+              color: Colors.blue,
+              size: 20,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: TextField(
@@ -336,7 +399,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 style: GoogleFonts.poppins(color: Colors.white, fontSize: 14),
                 decoration: InputDecoration(
                   hintText: "Type your message",
-                  hintStyle: GoogleFonts.poppins(color: Colors.white54, fontSize: 14),
+                  hintStyle: GoogleFonts.poppins(
+                    color: Colors.white54,
+                    fontSize: 14,
+                  ),
                   border: InputBorder.none,
                 ),
                 onSubmitted: (_) => _sendMessage(),
@@ -353,7 +419,11 @@ class _ChatScreenState extends State<ChatScreen> {
             const SizedBox(width: 8),
             GestureDetector(
               onTap: _sendMessage,
-              child: const Icon(Icons.send_rounded, color: Colors.blue, size: 24),
+              child: const Icon(
+                Icons.send_rounded,
+                color: Colors.blue,
+                size: 24,
+              ),
             ),
           ],
         ),
@@ -370,13 +440,13 @@ class RoutePainterChat extends CustomPainter {
       ..strokeWidth = 4
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
-    
+
     Path path = Path();
-    path.moveTo(0, 0); 
+    path.moveTo(0, 0);
     path.lineTo(size.width * 0.9, size.height * 0.3);
     path.lineTo(size.width * 0.9, size.height * 0.8);
     path.lineTo(size.width - 15, size.height);
-    
+
     canvas.drawPath(path, paint);
   }
 

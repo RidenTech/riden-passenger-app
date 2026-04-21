@@ -1,7 +1,10 @@
 import 'package:Riden/account/App_setting/password_changed.dart';
 import 'package:Riden/widgets/custom_text_field.dart';
+import 'package:Riden/widgets/riden_map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/home/notification_screen.dart';
+import 'package:get/get.dart';
 // Ensure this path matches your p
 
 class SetNewPasswordScreen extends StatefulWidget {
@@ -22,15 +25,7 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
       body: Stack(
         children: [
           // ── Background Map ──────────────────────────────────────────
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.4,
-              child: Image.asset(
-                "assets/images/map.png", // Ensure asset is in pubspec.yaml
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          Positioned.fill(child: RidenMapView(mapHeight: double.infinity)),
 
           // ── Top Navigation Bar ──────────────────────────────────────
           _buildHeader(context),
@@ -112,52 +107,86 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
 
   Widget _buildHeader(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: const CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 20,
-                child: Icon(Icons.arrow_back, color: Colors.black, size: 20),
-              ),
-            ),
-            Text(
-              'RIDEN',
-              style: GoogleFonts.audiowide(
-                fontSize: 24,
-                color: Colors.white.withOpacity(0.15),
-                letterSpacing: 2,
-              ),
-            ),
-            Stack(
+            child: Column(
               children: [
-                const Icon(
-                  Icons.notifications_none,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                Positioned(
-                  right: 4,
-                  top: 4,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
+                const SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    'RIDEN',
+                    style: GoogleFonts.audiowide(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey.shade600.withOpacity(0.8),
+                      height: 1.0,
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 15,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // White back button
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(7),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      // Notification bell with red dot
+                      GestureDetector(
+                        onTap: () => Get.to(() => const NotificationScreen()),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
+          );        
   }
 
   Widget _buildChangePasswordButton() {
@@ -185,7 +214,7 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
           borderRadius: BorderRadius.circular(16),
           onTap: () {
             // Logic to transition to Password Success Screen
-             Navigator.push(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const PasswordSuccessScreen()),
             );

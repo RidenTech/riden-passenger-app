@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import '../../controllers/auth_controller.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/riden_top_bar.dart';
+import '../../widgets/riden_map_view.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({super.key});
@@ -13,10 +15,11 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
-  final _fullNameController = TextEditingController(text: "Haris Mehmood");
-  final _emailController = TextEditingController(text: "haris@riden.tech");
-  final _phoneController = TextEditingController(text: "3123456789");
-  
+  late TextEditingController _fullNameController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneController;
+  late AuthController _authController;
+
   String _selectedCountryName = 'Pakistan';
   String _selectedCountryCode = '+92';
   String? _selectedGender = 'Male';
@@ -28,6 +31,70 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     {'code': '+1', 'flag': '🇺🇸', 'name': 'USA'},
     {'code': '+91', 'flag': '🇮🇳', 'name': 'India'},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _authController = Get.find<AuthController>();
+
+    // Initialize controllers with empty values first (to prevent null errors)
+    _fullNameController = TextEditingController();
+    _emailController = TextEditingController();
+    _phoneController = TextEditingController();
+
+    // Load user data from SharedPreferences
+    _loadUserDataAndInitialize();
+  }
+
+  /// Load user data from SharedPreferences and update controllers
+  Future<void> _loadUserDataAndInitialize() async {
+    print('\n👤 Profile: Starting data initialization...');
+
+    // Ensure AuthController is fully initialized
+    await _authController.ensureInitialized();
+
+    // Force reload the data from SharedPreferences
+    await _authController.forceReloadUserData();
+
+    if (mounted) {
+      setState(() {
+        // Update controller text with loaded data
+        _fullNameController.text = _authController.userFullName.value.isNotEmpty
+            ? _authController.userFullName.value
+            : "User";
+        _emailController.text = _authController.userEmail.value.isNotEmpty
+            ? _authController.userEmail.value
+            : "user@example.com";
+
+        // Extract phone without country code
+        String phone = _authController.userPhone.value;
+        String countryCode = _authController.userCountryCode.value;
+
+        // If phone includes country code, extract just the number part
+        if (phone.startsWith(countryCode)) {
+          phone = phone.replaceFirst(countryCode, '').trim();
+        }
+
+        _phoneController.text = phone;
+        _selectedCountryCode = countryCode;
+        _selectedGender = _authController.userGender.value.isNotEmpty
+            ? _authController.userGender.value
+            : 'Male';
+
+        print(
+          '✅ Profile loaded: ${_authController.userFullName.value} (${_authController.userEmail.value})',
+        );
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +112,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             left: 0,
             right: 0,
             height: screenHeight * 0.20,
-            child: Image.asset(
-              "assets/images/map.png",
-              fit: BoxFit.cover,
-              opacity: const AlwaysStoppedAnimation(0.6),
-            ),
+            child: RidenMapView(mapHeight: screenHeight * 0.20),
           ),
 
           // Branding & Top Bar
@@ -124,16 +187,26 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     value: country['name'],
                                     child: Text(
                                       '${country['flag']} ${country['code']}',
-                                      style: const TextStyle(color: Colors.white, fontSize: 13),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13,
+                                      ),
                                     ),
                                   );
                                 }).toList(),
                                 onChanged: (value) => setState(() {
                                   _selectedCountryName = value!;
-                                  _selectedCountryCode = _countryCodes.firstWhere((c) => c['name'] == value)['code']!;
+                                  _selectedCountryCode = _countryCodes
+                                      .firstWhere(
+                                        (c) => c['name'] == value,
+                                      )['code']!;
                                 }),
                                 dropdownColor: const Color(0xFF1E1E1E),
-                                icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white54, size: 16),
+                                icon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.white54,
+                                  size: 16,
+                                ),
                               ),
                             ),
                           ),
@@ -146,7 +219,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         hintText: 'Select gender',
                         value: _selectedGender,
                         items: ['Male', 'Female', 'Other']
-                            .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                            .map(
+                              (g) => DropdownMenuItem(value: g, child: Text(g)),
+                            )
                             .toList(),
                         onChanged: (v) => setState(() => _selectedGender = v),
                       ),
@@ -178,22 +253,80 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     );
   }
 
+  /// Get user initials from full name (first letter of first name + first letter of last name)
+  String _getInitials(String fullName) {
+    if (fullName.isEmpty) return "U";
+
+    List<String> names = fullName.trim().split(' ');
+
+    if (names.length >= 2) {
+      // Get first letter of first name and first letter of last name
+      return (names[0][0] + names[names.length - 1][0]).toUpperCase();
+    } else if (names.length == 1) {
+      // If only one name, show two first letters or repeat first letter
+      String name = names[0];
+      return name.length >= 2
+          ? name.substring(0, 2).toUpperCase()
+          : (name[0] + name[0]).toUpperCase();
+    }
+
+    return "U";
+  }
+
+  /// Get initials from first name and last name separately
+  String _getInitialsFromNames(String firstName, String lastName) {
+    if (firstName.isEmpty && lastName.isEmpty) return "U";
+
+    String initials = "";
+
+    if (firstName.isNotEmpty) {
+      initials += firstName[0].toUpperCase();
+    }
+
+    if (lastName.isNotEmpty) {
+      initials += lastName[0].toUpperCase();
+    }
+
+    // If we only have one name part, try to use two letters from it
+    if (initials.length == 1) {
+      String name = firstName.isNotEmpty ? firstName : lastName;
+      initials = name.length >= 2
+          ? name.substring(0, 2).toUpperCase()
+          : (name[0] + name[0]).toUpperCase();
+    }
+
+    return initials.isNotEmpty ? initials : "U";
+  }
+
   Widget _buildProfileHeader() {
     return Column(
       children: [
         Stack(
           children: [
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.blue[600]!, width: 2),
-              ),
-              child: const CircleAvatar(
-                radius: 45,
-                backgroundImage: AssetImage("assets/images/profile.png"),
-              ),
-            ),
+            Obx(() {
+              String firstName = _authController.userFirstName.value;
+              String lastName = _authController.userLastName.value;
+              String initials = _getInitialsFromNames(firstName, lastName);
+              return Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.blue[600]!, width: 2),
+                ),
+                child: CircleAvatar(
+                  radius: 45,
+                  backgroundColor: const Color(0xFF6395FF),
+                  child: Text(
+                    initials,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            }),
             Positioned(
               bottom: 0,
               right: 0,
@@ -203,27 +336,31 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   color: Color(0xFF174AB7),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.camera_alt_outlined, color: Colors.white, size: 16),
+                child: const Icon(
+                  Icons.camera_alt_outlined,
+                  color: Colors.white,
+                  size: 16,
+                ),
               ),
             ),
           ],
         ),
         const SizedBox(height: 12),
-        Text(
-          "Jackson Morgan",
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          "jackson@riden.tech",
-          style: GoogleFonts.poppins(
-            color: Colors.white54,
-            fontSize: 14,
-          ),
-        ),
+        Obx(() {
+          String firstName = _authController.userFirstName.value;
+          String lastName = _authController.userLastName.value;
+          String displayName = '$firstName $lastName'.trim().isNotEmpty
+              ? '$firstName $lastName'.trim()
+              : "User";
+          return Text(
+            displayName,
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+        }),
       ],
     );
   }

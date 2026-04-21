@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 import 'conic_border_painter.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -50,11 +49,31 @@ class CustomTextField extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
-              const BoxShadow(offset: Offset(-2, 4), blurRadius: 10, color: Color(0x0D919191)),
-              const BoxShadow(offset: Offset(-7, 17), blurRadius: 18, color: Color(0x0A919191)),
-              const BoxShadow(offset: Offset(-15, 37), blurRadius: 24, color: Color(0x08919191)),
-              const BoxShadow(offset: Offset(-27, 66), blurRadius: 29, color: Color(0x03919191)),
-              const BoxShadow(offset: Offset(-42, 103), blurRadius: 31, color: Color(0x00919191)),
+              const BoxShadow(
+                offset: Offset(-2, 4),
+                blurRadius: 10,
+                color: Color(0x0D919191),
+              ),
+              const BoxShadow(
+                offset: Offset(-7, 17),
+                blurRadius: 18,
+                color: Color(0x0A919191),
+              ),
+              const BoxShadow(
+                offset: Offset(-15, 37),
+                blurRadius: 24,
+                color: Color(0x08919191),
+              ),
+              const BoxShadow(
+                offset: Offset(-27, 66),
+                blurRadius: 29,
+                color: Color(0x03919191),
+              ),
+              const BoxShadow(
+                offset: Offset(-42, 103),
+                blurRadius: 31,
+                color: Color(0x00919191),
+              ),
             ],
           ),
           child: ClipRRect(
@@ -88,9 +107,7 @@ class CustomTextField extends StatelessWidget {
                       ),
                     ),
                     Positioned.fill(
-                      child: CustomPaint(
-                        painter: ConicBorderPainter(),
-                      ),
+                      child: CustomPaint(painter: ConicBorderPainter()),
                     ),
                     TextField(
                       controller: controller,
@@ -99,8 +116,16 @@ class CustomTextField extends StatelessWidget {
                       style: const TextStyle(color: Colors.white, fontSize: 14),
                       decoration: InputDecoration(
                         hintText: hintText,
-                        hintStyle: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 14),
-                        contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        hintStyle: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                          fontSize: 14,
+                        ),
+                        contentPadding:
+                            contentPadding ??
+                            const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
                         border: InputBorder.none,
                         prefixIcon: prefixIcon,
                         suffixIcon: suffixIcon,
@@ -158,11 +183,31 @@ class CustomDropdownField extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
-              const BoxShadow(offset: Offset(-2, 4), blurRadius: 10, color: Color(0x0D919191)),
-              const BoxShadow(offset: Offset(-7, 17), blurRadius: 18, color: Color(0x0A919191)),
-              const BoxShadow(offset: Offset(-15, 37), blurRadius: 24, color: Color(0x08919191)),
-              const BoxShadow(offset: Offset(-27, 66), blurRadius: 29, color: Color(0x03919191)),
-              const BoxShadow(offset: Offset(-42, 103), blurRadius: 31, color: Color(0x00919191)),
+              const BoxShadow(
+                offset: Offset(-2, 4),
+                blurRadius: 10,
+                color: Color(0x0D919191),
+              ),
+              const BoxShadow(
+                offset: Offset(-7, 17),
+                blurRadius: 18,
+                color: Color(0x0A919191),
+              ),
+              const BoxShadow(
+                offset: Offset(-15, 37),
+                blurRadius: 24,
+                color: Color(0x08919191),
+              ),
+              const BoxShadow(
+                offset: Offset(-27, 66),
+                blurRadius: 29,
+                color: Color(0x03919191),
+              ),
+              const BoxShadow(
+                offset: Offset(-42, 103),
+                blurRadius: 31,
+                color: Color(0x00919191),
+              ),
             ],
           ),
           child: ClipRRect(
@@ -195,9 +240,7 @@ class CustomDropdownField extends StatelessWidget {
                       ),
                     ),
                     Positioned.fill(
-                      child: CustomPaint(
-                        painter: ConicBorderPainter(),
-                      ),
+                      child: CustomPaint(painter: ConicBorderPainter()),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -221,7 +264,10 @@ class CustomDropdownField extends StatelessWidget {
                             color: Colors.white54,
                           ),
                           isExpanded: true,
-                          style: const TextStyle(color: Colors.white, fontSize: 14),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ),
@@ -235,5 +281,3 @@ class CustomDropdownField extends StatelessWidget {
     );
   }
 }
-
-

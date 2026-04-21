@@ -1,9 +1,9 @@
 import 'package:Riden/Booking/driver_search_view.dart';
+import 'package:Riden/Booking/ride_confirmation_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'car_selection_view.dart';
-import 'ride_confirmation_view.dart';
 
 class RideDetailView extends StatefulWidget {
   final CarOption selectedCar;
@@ -416,7 +416,7 @@ class _RideDetailViewState extends State<RideDetailView> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const DriverSearchView(),
+                  builder: (context) => const RideConfirmationView(),
                 ),
               );
             },

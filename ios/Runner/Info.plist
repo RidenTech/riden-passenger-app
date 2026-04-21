@@ -4,6 +4,8 @@
 <dict>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Riden needs your location to show nearby rides.</string>
+    <key>com.google.ios.maps.API_KEY</key>
+    <string>AIzaSyD3Tw1rkB9PWTx_7vRUrGvgQfxIrBbNYkg</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

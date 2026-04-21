@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:Riden/widgets/shared_map_widget.dart';
 
 class SubmitComplaintTicketsScreen extends StatefulWidget {
   const SubmitComplaintTicketsScreen({super.key});
@@ -138,52 +139,25 @@ class _SubmitComplaintTicketsScreenState
       backgroundColor: const Color(0xFF0A0A0A),
       body: Stack(
         children: [
-          // Map Background (20% of screen)
+          // Map Background (20% of screen) - Shared Global Map
           Positioned(
             top: 0,
             left: 0,
             right: 0,
             height: MediaQuery.of(context).size.height * 0.2,
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFF1A1A1A),
-                image: DecorationImage(
-                  image: const AssetImage('assets/images/map_pattern.png'),
-                  fit: BoxFit.cover,
-                  opacity: 0.3,
+            child: Stack(
+              children: [
+                // Shared Map Widget
+                SharedMapWidget(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  width: double.infinity,
                 ),
-              ),
-              child: Stack(
-                children: [
-                  // Back Button
-                  Positioned(
-                    top: MediaQuery.of(context).padding.top + 10,
-                    left: 16,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.2),
-                            width: 1,
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Notification Bell
-                  Positioned(
-                    top: MediaQuery.of(context).padding.top + 10,
-                    right: 16,
+                // Back Button
+                Positioned(
+                  top: MediaQuery.of(context).padding.top + 10,
+                  left: 16,
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context),
                     child: Container(
                       width: 40,
                       height: 40,
@@ -195,33 +169,55 @@ class _SubmitComplaintTicketsScreenState
                           width: 1,
                         ),
                       ),
-                      child: Stack(
-                        children: [
-                          const Center(
-                            child: Icon(
-                              Icons.notifications_outlined,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFFF3B30),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                        size: 20,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                // Notification Bell
+                Positioned(
+                  top: MediaQuery.of(context).padding.top + 10,
+                  right: 16,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.2),
+                        width: 1,
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        const Center(
+                          child: Icon(
+                            Icons.notifications_outlined,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFFF3B30),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
 

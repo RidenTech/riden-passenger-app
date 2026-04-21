@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../Booking/active_ride_screen.dart'; 
+import 'package:Riden/widgets/shared_map_widget.dart';
+import 'package:Riden/home/notification_screen.dart';
+import '../Booking/active_ride_screen.dart';
 
 class CallScreen extends StatefulWidget {
   const CallScreen({super.key});
@@ -39,17 +41,13 @@ class _CallScreenState extends State<CallScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Map Background
+          // Map Background (Shared Global Map)
           Positioned.fill(
-            child: Image.asset(
-              "assets/images/map.png",
-              fit: BoxFit.cover,
-              opacity: const AlwaysStoppedAnimation(0.6),
-            ),
+            child: SharedMapWidget(height: MediaQuery.of(context).size.height),
           ),
           _buildMapOverlay(),
           // Top Action Buttons
-           SafeArea(
+          SafeArea(
             child: Column(
               children: [
                 const SizedBox(height: 10),
@@ -84,39 +82,54 @@ class _CallScreenState extends State<CallScreen> {
                                     color: Colors.white,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.arrow_back,
-                                      color: Colors.black, size: 20),
+                                  child: const Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.black,
+                                    size: 20,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ],
                       ),
-                      Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.25),
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white24, width: 1),
-                            ),
-                            child: const Icon(Icons.notifications_none_outlined,
-                                color: Colors.white, size: 20),
-                          ),
-                          Positioned(
-                            right: 2,
-                            top: 2,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const NotificationScreen()),
+                        ),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
                                 shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -132,12 +145,22 @@ class _CallScreenState extends State<CallScreen> {
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Color(0xFF030408),
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
+                ),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2))),
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   // profile image
                   Container(
@@ -148,30 +171,62 @@ class _CallScreenState extends State<CallScreen> {
                     ),
                     child: const CircleAvatar(
                       radius: 46,
-                      backgroundImage: AssetImage("assets/images/profile.png"), 
+                      backgroundImage: AssetImage("assets/images/profile.png"),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text("Sergio Fernandez", style: GoogleFonts.poppins(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(
+                    "Sergio Fernandez",
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  Text("Calling.....", style: GoogleFonts.poppins(color: Colors.white54, fontSize: 13)),
+                  Text(
+                    "Calling.....",
+                    style: GoogleFonts.poppins(
+                      color: Colors.white54,
+                      fontSize: 13,
+                    ),
+                  ),
                   const Spacer(),
                   // call action bar
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 40),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 15,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15), 
+                      color: Colors.white.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(color: Colors.white.withOpacity(0.05)),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildCallIcon(Icons.more_horiz, Colors.black, Colors.white.withOpacity(0.8)),
-                        _buildCallIcon(Icons.videocam, Colors.black, Colors.white.withOpacity(0.8)),
-                        _buildCallIcon(Icons.mic_off, Colors.black, Colors.white.withOpacity(0.8)),
-                        _buildCallIcon(Icons.call_end, Colors.white, Colors.red),
+                        _buildCallIcon(
+                          Icons.more_horiz,
+                          Colors.black,
+                          Colors.white.withOpacity(0.8),
+                        ),
+                        _buildCallIcon(
+                          Icons.videocam,
+                          Colors.black,
+                          Colors.white.withOpacity(0.8),
+                        ),
+                        _buildCallIcon(
+                          Icons.mic_off,
+                          Colors.black,
+                          Colors.white.withOpacity(0.8),
+                        ),
+                        _buildCallIcon(
+                          Icons.call_end,
+                          Colors.white,
+                          Colors.red,
+                        ),
                       ],
                     ),
                   ),
@@ -188,10 +243,7 @@ class _CallScreenState extends State<CallScreen> {
   Widget _buildCallIcon(IconData icon, Color iconColor, Color bgColor) {
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: bgColor,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
       child: Icon(icon, color: iconColor, size: 24),
     );
   }
@@ -201,32 +253,45 @@ class _CallScreenState extends State<CallScreen> {
       child: Stack(
         children: [
           Positioned(
-             top: 360,
-             left: 100,
-             child: CustomPaint(
-                size: const Size(200, 100),
-                painter: RoutePainterChat(), // reuse the math
-             ),
+            top: 360,
+            left: 100,
+            child: CustomPaint(
+              size: const Size(200, 100),
+              painter: RoutePainterChat(), // reuse the math
+            ),
           ),
           Positioned(
             top: 350,
             left: 90,
             child: Transform.rotate(
               angle: -0.2, // rotate right
-              child: Image.asset("assets/images/car.png", width: 40, height: 20, fit: BoxFit.contain, color: Colors.white),
+              child: Image.asset(
+                "assets/images/car.png",
+                width: 40,
+                height: 20,
+                fit: BoxFit.contain,
+                color: Colors.white,
+              ),
             ),
           ),
           Positioned(
-             top: 310,
-             left: 60,
-             child: Container(
-               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-               decoration: BoxDecoration(
-                 color: Colors.white.withOpacity(0.9),
-                 borderRadius: BorderRadius.circular(8),
-               ),
-               child: Text("5 min away", style: GoogleFonts.poppins(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.bold)),
-             ),
+            top: 310,
+            left: 60,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                "5 min away",
+                style: GoogleFonts.poppins(
+                  color: Colors.blue,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
           Positioned(
             top: 440,
@@ -261,13 +326,13 @@ class RoutePainterChat extends CustomPainter {
       ..strokeWidth = 4
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
-    
+
     Path path = Path();
-    path.moveTo(0, 0); 
+    path.moveTo(0, 0);
     path.lineTo(size.width * 0.9, size.height * 0.3);
     path.lineTo(size.width * 0.9, size.height * 0.8);
     path.lineTo(size.width - 15, size.height);
-    
+
     canvas.drawPath(path, paint);
   }
 

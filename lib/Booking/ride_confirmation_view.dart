@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/widgets/shared_map_widget.dart';
 import 'driver_search_view.dart';
+import 'package:Riden/home/notification_screen.dart';
+import 'package:get/get.dart';
 
 class RideConfirmationView extends StatelessWidget {
   const RideConfirmationView({super.key});
@@ -10,20 +13,13 @@ class RideConfirmationView extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Map Background (Fills entire background)
+          // Map Background (Shared Global Map - Fills entire background)
           Positioned.fill(
-            child: Container(
-              color: Colors.black,
-              child: Image.asset(
-                "assets/images/map.png",
-                fit: BoxFit.cover,
-                opacity: const AlwaysStoppedAnimation(0.6),
-              ),
-            ),
+            child: SharedMapWidget(height: MediaQuery.of(context).size.height),
           ),
 
           // Top Action Buttons
-           SafeArea(
+          SafeArea(
             child: Column(
               children: [
                 const SizedBox(height: 10),
@@ -58,39 +54,51 @@ class RideConfirmationView extends StatelessWidget {
                                     color: Colors.white,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.arrow_back,
-                                      color: Colors.black, size: 20),
+                                  child: const Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.black,
+                                    size: 20,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ],
                       ),
-                      Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.25),
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white24, width: 1),
-                            ),
-                            child: const Icon(Icons.notifications_none_outlined,
-                                color: Colors.white, size: 20),
-                          ),
-                          Positioned(
-                            right: 2,
-                            top: 2,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
+                      GestureDetector(
+                        onTap: () => Get.to(() => const NotificationScreen()),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
                                 shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -125,7 +133,7 @@ class RideConfirmationView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  
+
                   // Confirmation Text
                   Text(
                     "Confirm Pickup",
@@ -138,7 +146,6 @@ class RideConfirmationView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 30),
-                
 
                   // Confirm Button
                   _buildConfirmButton(context),

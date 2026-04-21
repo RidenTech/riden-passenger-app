@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/widgets/riden_map_view.dart';
+import 'package:Riden/home/notification_screen.dart';
+import 'package:get/get.dart';
 
 class RateDriverScreen extends StatefulWidget {
   const RateDriverScreen({super.key});
@@ -10,6 +13,9 @@ class RateDriverScreen extends StatefulWidget {
 
 class _RateDriverScreenState extends State<RateDriverScreen> {
   int _rating = 0;
+  String? _selectedTip;
+  double? _customTip;
+  final TextEditingController _customTipController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +29,8 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
             left: 0,
             right: 0,
             height: MediaQuery.of(context).size.height * 0.25,
-            child: Image.asset(
-              "assets/images/map.png",
-              fit: BoxFit.cover,
-              opacity: const AlwaysStoppedAnimation(0.6),
+            child: RidenMapView(
+              mapHeight: MediaQuery.of(context).size.height * 0.25,
             ),
           ),
 
@@ -77,37 +81,43 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                           ),
                         ],
                       ),
-                      Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.25),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white24,
-                                width: 1,
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.notifications_none_outlined,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                          Positioned(
-                            right: 2,
-                            top: 2,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const NotificationScreen()),
+                        ),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
                                 shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -345,9 +355,11 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () => _showCustomTipDialog(),
                       child: Text(
-                        "Enter Custom Amount",
+                        _customTip != null
+                            ? "Custom Tip: \$${_customTip!.toStringAsFixed(2)}"
+                            : "Enter Custom Amount",
                         style: GoogleFonts.poppins(
                           color: Colors.blue,
                           fontSize: 14,
@@ -355,6 +367,34 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                         ),
                       ),
                     ),
+
+                    if (_selectedTip != null || _customTip != null) ...[
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          onPressed: () {
+                            // Handle Submit
+                            Get.back();
+                          },
+                          child: Text(
+                            "Submit",
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
 
                     SizedBox(
                       height: MediaQuery.of(context).padding.bottom + 20,
@@ -370,20 +410,76 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
   }
 
   Widget _buildTipButton(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
-      ),
-      child: Text(
-        text,
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
+    bool isSelected = _selectedTip == text;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedTip = isSelected ? null : text;
+          _customTip = null; // Clear custom tip if percentage is selected
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue : Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? Colors.blue : Colors.white.withOpacity(0.15),
+            width: 1,
+          ),
         ),
+        child: Text(
+          text,
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCustomTipDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A2E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          "Enter Custom Tip",
+          style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        content: TextField(
+          controller: _customTipController,
+          keyboardType: TextInputType.number,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: "Enter amount",
+            hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel", style: TextStyle(color: Colors.white54)),
+          ),
+          TextButton(
+            onPressed: () {
+              if (_customTipController.text.isNotEmpty) {
+                setState(() {
+                  _customTip = double.tryParse(_customTipController.text);
+                  _selectedTip = null; // Clear percentage if custom tip is entered
+                });
+                Navigator.pop(context);
+              }
+            },
+            child: const Text("Done", style: TextStyle(color: Colors.blue)),
+          ),
+        ],
       ),
     );
   }

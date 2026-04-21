@@ -17,6 +17,18 @@ class ApiConstants {
   static const String deletePassengerEndpoint = '$baseUrl/delete';
   static const String toggleStatusEndpoint = '$baseUrl/status';
 
+  // Google Places API Configuration
+  // ⚠️ IMPORTANT: Replace with your actual Google Places API key
+  // Get your key from: https://console.cloud.google.com/
+  static const String googlePlacesApiKey =
+      'AIzaSyD3Tw1rkB9PWTx_7vRUrGvgQfxIrBbNYkg';
+
+  static const String googlePlacesAutocompleteUrl =
+      'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+
+  static const String googlePlacesDetailsUrl =
+      'https://maps.googleapis.com/maps/api/place/details/json';
+
   // Timeouts
   static const Duration connectTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);

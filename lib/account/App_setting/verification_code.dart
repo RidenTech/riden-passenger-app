@@ -1,6 +1,9 @@
 import 'package:Riden/account/App_setting/set%20_new_password.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:Riden/widgets/riden_map_view.dart';
+import 'package:Riden/home/notification_screen.dart';
+import 'package:get/get.dart';
 
 class VerifyOTPScreen extends StatefulWidget {
   const VerifyOTPScreen({super.key});
@@ -11,7 +14,10 @@ class VerifyOTPScreen extends StatefulWidget {
 
 class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
   // Controllers for each digit to handle focus and input
-  final List<TextEditingController> _controllers = List.generate(5, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    5,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(5, (_) => FocusNode());
 
   @override
@@ -21,15 +27,10 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
       body: Stack(
         children: [
           // Background Map Layer
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.5,
-              child: Image.asset("assets/images/map.png", fit: BoxFit.cover),
-            ),
-          ),
-          
+          Positioned.fill(child: RidenMapView(mapHeight: double.infinity)),
+
           _buildTopBar(context),
-          
+
           Align(
             alignment: Alignment.bottomCenter,
             child: _buildBottomSheet(
@@ -43,14 +44,17 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                   children: List.generate(5, (index) => _buildOTPBox(index)),
                 ),
                 const SizedBox(height: 30),
-                
+
                 // Resend Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       "Didn't receive code? ",
-                      style: GoogleFonts.poppins(color: Colors.white70, fontSize: 13),
+                      style: GoogleFonts.poppins(
+                        color: Colors.white70,
+                        fontSize: 13,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {}, // Handle Resend
@@ -66,7 +70,7 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                   ],
                 ),
                 const SizedBox(height: 30),
-                
+
                 // Primary Action Button
                 _buildVerifyButton(),
               ],
@@ -84,7 +88,10 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF0F1A2E).withOpacity(0.5),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFF3B67D5).withOpacity(0.5), width: 1.5),
+        border: Border.all(
+          color: const Color(0xFF3B67D5).withOpacity(0.5),
+          width: 1.5,
+        ),
       ),
       child: Center(
         child: TextField(
@@ -130,7 +137,7 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
             color: const Color(0xFF1E49B6).withOpacity(0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
-          )
+          ),
         ],
       ),
       child: Material(
@@ -138,7 +145,7 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () {
-             Navigator.push(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const SetNewPasswordScreen()),
             );
@@ -162,48 +169,93 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
   // Helper for Header Styling
   Widget _buildTopBar(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: const CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 18,
-                child: Icon(Icons.arrow_back, color: Colors.black, size: 18),
-              ),
-            ),
-            Text(
-              'RIDEN',
-              style: GoogleFonts.audiowide(
-                fontSize: 24,
-                color: Colors.white.withOpacity(0.2),
-                letterSpacing: 2,
-              ),
-            ),
-            Stack(
+            child: Column(
               children: [
-                const Icon(Icons.notifications_none, color: Colors.white, size: 28),
-                Positioned(
-                  right: 4,
-                  top: 4,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                const SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    'RIDEN',
+                    style: GoogleFonts.audiowide(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey.shade600.withOpacity(0.8),
+                      height: 1.0,
+                    ),
                   ),
-                )
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 15,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // White back button
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(7),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      // Notification bell with red dot
+                      GestureDetector(
+                        onTap: () => Get.to(() => const NotificationScreen()),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.25),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white24,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.notifications_none_outlined,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
+          );        
   }
 
-  Widget _buildBottomSheet({required String title, required String subtitle, required List<Widget> content}) {
+  Widget _buildBottomSheet({
+    required String title,
+    required String subtitle,
+    required List<Widget> content,
+  }) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 25),
@@ -220,12 +272,19 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
           Container(
             width: 50,
             height: 4,
-            decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2)),
+            decoration: BoxDecoration(
+              color: Colors.white24,
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
           const SizedBox(height: 40),
           Text(
             title,
-            style: GoogleFonts.poppins(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+            style: GoogleFonts.poppins(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           const SizedBox(height: 12),
           Text(
